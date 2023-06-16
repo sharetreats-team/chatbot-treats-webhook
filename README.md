@@ -4,21 +4,55 @@
 
 * **프로젝트 명 : Viber 챗봇 기반 선물하기 서비스 구현**
 * **프로젝트 기간 : 2023.06.08 ~ 2023.07.07**
-* **[Wiki 바로가기](https://github.com/sharetreats-team/chatbot-treats-webhook/wiki)**
-* **배포 링크**
+* **Viber챗봇 링크**
+
+> *설계 및 명세에 대한 내용은  `Wiki`를 참고해주세요.*
+> *[Wiki 바로가기](https://github.com/sharetreats-team/chatbot-treats-webhook/wiki)*
+
 <br>
 
 ## 개발환경
 
-### 1) 주요 기술 
+### 1) 주요 환경
 
-### 2) 세부 기술
+- IntelliJ IDEA (Ultimate)
+- Java 11
+- Gradle 8.0
+- Spring Boot 2.7.12
+
+> *Java 11과 Spring Boot 2.7.12 버전을 선택한 이유* <br>
+> *현재 기업 대부분 Java 8과 Java 11을 채택하여 사용하고 있는 경향이다. Java 8에서 라이브러리가 추가되었고, 성능이 개선된 G1 GC를 사용하는 Java 11을 선택하게 되었다.
+Java 17도 현재 존재하지만, 현재 프로젝트를 진행하는 팀원들의 개발환경이 주로 Java 11, SpringBoot 2였다. 새로운 기능을 활용하지 않을 것으로 예상되는 상황에서 익숙한 개발 버전을 선택하는 것이 적절한 판단이라고 생각했다.
+> Spring Boot는 3.x 버전 이상부터 Java 17 이상만 허용한다. 따라서 우리 팀은 2.7.x 버전을 선택하게 되었다.*
+
+### 2) 세부 기술 스택
+
+- (ORM) JPA
+- Query DSL
+- Spring Mail
+- Viber bot
+
 
 ### 3) 데이터베이스
 
+- (RDB) MySQL
+- (In-memory) redis
+
 ### 4) 인프라
 
+- AWS EC2 (HTTPS 네트워크 구축)
+- AWS RDS (MySQL)
+
 ### 5) VCS(Version Controller System) & etc
+
+- Git
+- Notion, Slack
+
+<br>
+
+## 프로젝트 아키텍처
+
+### CI/CD
 
 <br>
 
@@ -43,6 +77,10 @@
 
 ## 형상관리
 
+### 1) 브랜치 전략
+
+### 2) PR 및 코드리뷰 규칙
+
 <br>
 
 ## 기능 별 수행 결과
@@ -60,3 +98,4 @@
 <br>
 
 ## 문의하기
+- zlcls456@gmail.com
