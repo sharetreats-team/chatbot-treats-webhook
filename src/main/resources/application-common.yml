@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: common
+
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        same-site: None
+        secure: true
+      context-path: /
+      encoding:
+        charset: UTF-8
+        force-response: true

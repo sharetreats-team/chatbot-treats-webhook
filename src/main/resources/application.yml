@@ -1,11 +1,14 @@
-server:
-  port: 8080
-  servlet:
-    session:
-      cookie:
-        same-site: None
-        secure: true
-      context-path: /
-      encoding:
-        charset: UTF-8
-        force-response: true
+spring :
+  profiles:
+    active: test
+    group:
+      local:
+        - common
+      test:
+        - common
+      prod:
+        - common
+
+
+
+
