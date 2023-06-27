@@ -1,8 +1,8 @@
-package com.sharetreats.chatbot.product.service;
+package com.sharetreats.chatbot.module.service;
 
-import com.sharetreats.chatbot.product.dto.ViberRichMediaMessage;
-import com.sharetreats.chatbot.product.entity.Product;
-import com.sharetreats.chatbot.product.repository.ProductRepository;
+import com.sharetreats.chatbot.module.dto.ViberRichMediaMessage;
+import com.sharetreats.chatbot.module.entity.Product;
+import com.sharetreats.chatbot.module.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -11,19 +11,18 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-import static com.sharetreats.chatbot.product.dto.ViberRichMediaMessage.RichMedia;
+import static com.sharetreats.chatbot.module.dto.ViberRichMediaMessage.RichMedia;
 
 @Service
 public class RichMediaService {
     private final ProductRepository productRepository;
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     public RichMediaService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public ResponseEntity<ViberRichMediaMessage> sendProductsByBrand(String brandName, String auth_token, String receiverId) {
-        List<Product> products = productRepository.findByBrandName(brandName);
+    public ResponseEntity<ViberRichMediaMessage> sendProductsByBrand(String brandId, String auth_token, String receiverId) {
+        List<Product> products = productRepository.findByBrandId(Long.parseLong(brandId));
 
         ViberRichMediaMessage richMediaMessage = convertToRichMediaMessages(products);
         richMediaMessage.setReceiver(receiverId);

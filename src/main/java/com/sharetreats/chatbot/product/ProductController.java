@@ -1,7 +1,7 @@
 package com.sharetreats.chatbot.product;
 
-import com.sharetreats.chatbot.product.dto.ViberCallbackData;
-import com.sharetreats.chatbot.product.service.RichMediaService;
+import com.sharetreats.chatbot.module.dto.ViberCallbackData;
+import com.sharetreats.chatbot.module.service.RichMediaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,6 @@ public class ProductController {
 
     public ProductController(RichMediaService richMediaService) {
         this.richMediaService = richMediaService;
-    }
-
-    @GetMapping("/hello")
-    public String input() {
-        return "hello";
     }
 
     @PostMapping("/test")

@@ -63,7 +63,7 @@
 3️⃣ 'In Progress'로 옮긴 업무를 `Convert to issue`로 변경하고, 작업의 내용을 자세하게 작성합니다. <br>
 4️⃣ 코드를 `fork`하고 `개인 repository` 에서 작업합니다. <br>
 5️⃣ 작업을 완료하면 `original repository`의 `test` 브랜치로 PR을 보냅니다. <br>
-6️⃣ 코드리뷰를 진행하고, 모든 승인을 받으면 `Merge` 합니다.
+6️⃣ 코드리뷰를 진행하고, 모든 승인을 받으면 `Merge` 합니다. <br>
 7️⃣ Merge가 성공하면, Issue는 자동으로 종료합니다. 또한 `In Progress`에 있던 작업 티켓도 `Done`으로 자동으로 이동합니다.
 
 

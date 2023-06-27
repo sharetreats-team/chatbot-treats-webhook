@@ -1,4 +1,4 @@
-package com.sharetreats.chatbot.product.dto;
+package com.sharetreats.chatbot.module.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
