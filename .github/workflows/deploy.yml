@@ -24,14 +24,9 @@ jobs:
         with:
           java-version: 11
         
-    
-      - name: Set yaml file 
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ${{ env.RESOURCE_PATH }} 
-        env:
-           aws.s3.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY_ID}}
-           aws.s3.credentials.secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        
+      - name: Set yaml file
+        run: envsubst < ./src/main/resources/application.yaml > ./src/main/resources/application.yml
       
       
       - name: Grant execute permission for gradlew
