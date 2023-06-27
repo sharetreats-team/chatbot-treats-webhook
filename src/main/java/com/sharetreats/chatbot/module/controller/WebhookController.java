@@ -3,6 +3,7 @@ package com.sharetreats.chatbot.module.controller;
 import com.sharetreats.chatbot.module.controller.webhook.SendPaymentResultMessage;
 import com.sharetreats.chatbot.module.controller.webhook.SendProductsOfBrand;
 import com.sharetreats.chatbot.module.controller.webhook.SendWelcomeMessage;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,12 @@ import static com.sharetreats.chatbot.module.controller.WebhookController.InputK
  * @Webhook_URL_Endpoint: "/viber/bot/webhook"
  */
 @RestController
+@RequiredArgsConstructor
 public class WebhookController {
+
+    private final SendWelcomeMessage sendWelcomeMessage;
+    private final SendPaymentResultMessage sendPaymentResultMessage;
+    private final SendProductsOfBrand sendProductsOfBrand;
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -33,8 +39,12 @@ public class WebhookController {
     @PostMapping("/viber/bot/webhook")
     public ResponseEntity<?> webhook(@RequestBody String callback) {
         String event = getEventValueToCallback(callback);
-        if (event.equals(CONVERSATION_STARTED)) return SendWelcomeMessage.execute();
-        if (event.equals(MESSAGE)) return sendResponseByTextInMessage(callback);
+
+        if (event.equals(CONVERSATION_STARTED))
+            return sendWelcomeMessage.execute(callback);
+        if (event.equals(MESSAGE))
+            return sendResponseByTextInMessage(callback);
+
         return null;
     }
 
@@ -44,10 +54,13 @@ public class WebhookController {
      * @param callback
      * @return ResponseEntity
      */
-    private static ResponseEntity<?> sendResponseByTextInMessage(String callback) {
+    private ResponseEntity<?> sendResponseByTextInMessage(String callback) {
         String text = getTextToMessage(callback);
-        if (isContains(text, BUY_USE_POINT)) return SendPaymentResultMessage.execute(callback);
-        if (isContains(text, VIEW_PRODUCTS_OF_BRAND)) return SendProductsOfBrand.execute(callback);
+        if (isContains(text, BUY_USE_POINT))
+            return sendPaymentResultMessage.execute(callback);
+        if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
+            return sendProductsOfBrand.execute(callback);
+
         throw new IllegalArgumentException("어떠한 이벤트에도 해당하지 않는 문자입니다.");
     }
 
