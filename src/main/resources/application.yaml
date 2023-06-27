@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        same-site: None
+        secure: true
+      context-path: /
+      encoding:
+        charset: UTF-8
+        force-response: true
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${RDS_URL}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+cloud:
+  aws:
+    s3:
+      bucket: stchatbotimagebucket
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+      
+brand-path: "brand"
+product-path: "product" 
+      
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        orm:
+          jpa: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+
+
+
