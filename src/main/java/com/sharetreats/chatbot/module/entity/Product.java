@@ -1,6 +1,6 @@
 package com.sharetreats.chatbot.module.entity;
 
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "product")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,11 +28,7 @@ public class Product {
     private Integer discountPrice;
     @Column(name = "discount_shop")
     private String discountShop;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brand_id", nullable = false)
-    private Brand brand;
+    @Column(name = "brand_name")
+    private String brandName;
 
-    public String getBrandName() {
-        return brand.getName();
-    }
 }

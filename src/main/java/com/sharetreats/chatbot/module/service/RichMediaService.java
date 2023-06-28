@@ -1,28 +1,39 @@
 package com.sharetreats.chatbot.module.service;
 
 import com.sharetreats.chatbot.module.dto.ViberRichMediaMessage;
+import com.sharetreats.chatbot.module.entity.Brand;
 import com.sharetreats.chatbot.module.entity.Product;
+import com.sharetreats.chatbot.module.repository.BrandRepository;
 import com.sharetreats.chatbot.module.repository.ProductRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.sharetreats.chatbot.module.dto.ViberRichMediaMessage.RichMedia;
 
+
 @Service
+@RequiredArgsConstructor
 public class RichMediaService {
     private final ProductRepository productRepository;
-
-    public RichMediaService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final BrandRepository brandRepository;
 
     public ResponseEntity<ViberRichMediaMessage> sendProductsByBrand(String receiverId, Long brandId, String auth_token) {
-        List<Product> products = productRepository.findByBrandId(brandId);
+        Brand brand = brandRepository.findById(brandId).orElse(null);
+        if (brand == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        String brandName = brand.getName();
+        List<Product> products = productRepository.findByBrandName(brandName);
+
+        String sendUrl = "https://chatapi.viber.com/pa/send_message";
 
         ViberRichMediaMessage richMediaMessage = convertToRichMediaMessages(products);
         richMediaMessage.setReceiver(receiverId);
@@ -33,7 +44,7 @@ public class RichMediaService {
 
         HttpEntity<ViberRichMediaMessage> httpEntity = new HttpEntity<>(richMediaMessage, headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity("https://chatapi.viber.com/pa/send_message", httpEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(sendUrl, httpEntity, String.class);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok(richMediaMessage);
