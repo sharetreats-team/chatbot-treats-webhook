@@ -3,7 +3,7 @@ name: CI-CD
 on:
   push:
     branches:
-      - main
+      - test
 
 env:
   S3_BUCKET_NAME: stchatbotbucket
