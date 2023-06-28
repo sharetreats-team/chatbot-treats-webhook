@@ -21,8 +21,8 @@ public class RichMediaService {
         this.productRepository = productRepository;
     }
 
-    public ResponseEntity<ViberRichMediaMessage> sendProductsByBrand(String brandId, String auth_token, String receiverId) {
-        List<Product> products = productRepository.findByBrandId(Long.parseLong(brandId));
+    public ResponseEntity<ViberRichMediaMessage> sendProductsByBrand(String receiverId, Long brandId, String auth_token) {
+        List<Product> products = productRepository.findByBrandId(brandId);
 
         ViberRichMediaMessage richMediaMessage = convertToRichMediaMessages(products);
         richMediaMessage.setReceiver(receiverId);

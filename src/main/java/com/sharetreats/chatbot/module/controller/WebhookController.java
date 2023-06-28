@@ -44,7 +44,7 @@ public class WebhookController {
      * @param callback
      * @return ResponseEntity
      */
-    private static ResponseEntity<?> sendResponseByTextInMessage(String callback) {
+    private ResponseEntity<?> sendResponseByTextInMessage(String callback) {
         String text = getTextToMessage(callback);
         if (isContains(text, BUY_USE_POINT)) return SendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND)) return SendProductsOfBrand.execute(callback);
