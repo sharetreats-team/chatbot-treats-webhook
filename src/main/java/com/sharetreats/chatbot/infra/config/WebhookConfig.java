@@ -23,7 +23,7 @@ public class WebhookConfig {
     @Value("${viber.auth.token}")
     private String authToken;
     private String webhookUrl = "https://chatapi.viber.com/pa/set_webhook";
-    private String payload = "https://stchatbot.site";
+    private String payload = "https://stchatbot.site/viber/bot/webhook";
 
     @SneakyThrows
     public void setWebhook()  {
