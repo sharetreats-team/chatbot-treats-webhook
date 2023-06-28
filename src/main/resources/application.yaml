@@ -19,7 +19,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
+  redis:
+    gift-history:
+      host: ${ELASTICACHE_ENDPOINT}
+      port: 6379
+      
 cloud:
   aws:
     s3:
@@ -46,5 +50,10 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
 
+viber:
+  auth:
+    token: ${VIBER_AUTH_TOKEN}
+  avatar: ${VIBER_AVATAR}
+  welcome-media: ${VIBER_WELCOME_MEDIA}
 
 
