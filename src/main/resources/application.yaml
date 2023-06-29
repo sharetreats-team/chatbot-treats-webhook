@@ -13,12 +13,12 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${RDS_URL}:3306/st
-    username: ${RDS_USERNAME}
-    password: ${RDS_PASSWORD}
+    url: jdbc:mysql://sharetreats-database.cxyn6whvc7o6.ap-northeast-2.rds.amazonaws.com:3306/st
+    username: admin
+    password: user1234
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   redis:
     gift-history:
       host: ${ELASTICACHE_ENDPOINT}
