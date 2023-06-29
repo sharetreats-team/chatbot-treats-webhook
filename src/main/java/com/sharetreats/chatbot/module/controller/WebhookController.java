@@ -1,5 +1,6 @@
 package com.sharetreats.chatbot.module.controller;
 
+import com.sharetreats.chatbot.module.controller.webhook.SendBrandKeyboardMessage;
 import com.sharetreats.chatbot.module.controller.webhook.SendPaymentResultMessage;
 import com.sharetreats.chatbot.module.controller.webhook.SendProductsOfBrand;
 import com.sharetreats.chatbot.module.controller.webhook.SendWelcomeMessage;
@@ -12,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.sharetreats.chatbot.module.controller.WebhookController.EventType.CONVERSATION_STARTED;
 import static com.sharetreats.chatbot.module.controller.WebhookController.EventType.MESSAGE;
-import static com.sharetreats.chatbot.module.controller.WebhookController.InputKeyword.BUY_USE_POINT;
-import static com.sharetreats.chatbot.module.controller.WebhookController.InputKeyword.VIEW_PRODUCTS_OF_BRAND;
+import static com.sharetreats.chatbot.module.controller.WebhookController.InputKeyword.*;
 
 /**
  * Viber 에 챗봇(Chat Bot)과 연결된 서버인 웹후크(역방향 API) 입니다.
@@ -30,6 +30,7 @@ public class WebhookController {
     private final SendWelcomeMessage sendWelcomeMessage;
     private final SendPaymentResultMessage sendPaymentResultMessage;
     private final SendProductsOfBrand sendProductsOfBrand;
+    private final SendBrandKeyboardMessage sendBrandKeyboardMessage;
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -60,6 +61,8 @@ public class WebhookController {
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
             return sendProductsOfBrand.execute(callback);
+        if (isContains(text, VIEW_BRANDS))
+            return sendBrandKeyboardMessage.execute(callback);
 
         throw new IllegalArgumentException("어떠한 이벤트에도 해당하지 않는 문자입니다.");
     }
@@ -84,5 +87,6 @@ public class WebhookController {
     static class InputKeyword {
         public static final String BUY_USE_POINT = "use point";
         public static final String VIEW_PRODUCTS_OF_BRAND = "brand name";
+        public static final String VIEW_BRANDS = "show treats";
     }
 }
