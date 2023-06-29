@@ -11,10 +11,11 @@ public class HealthCheckController {
     private final WebhookConfig webhookConfig;
     private boolean webhookSet = false;
     @GetMapping("/health")
-    public void healthCheck() {
+    public String healthCheck() {
         if (!webhookSet) {
             webhookConfig.setWebhook();
             webhookSet = true;
         }
+        return "health check";
     }
 }
