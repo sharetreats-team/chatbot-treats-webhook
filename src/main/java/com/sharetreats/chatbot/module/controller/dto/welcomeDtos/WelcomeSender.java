@@ -1,4 +1,4 @@
-package com.sharetreats.chatbot.module.controller.dto;
+package com.sharetreats.chatbot.module.controller.dto.welcomeDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
