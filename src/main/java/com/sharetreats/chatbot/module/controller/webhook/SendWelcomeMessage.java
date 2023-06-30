@@ -1,8 +1,8 @@
 package com.sharetreats.chatbot.module.controller.webhook;
 
-import com.sharetreats.chatbot.module.controller.dto.WelcomeButton;
-import com.sharetreats.chatbot.module.controller.dto.WelcomeKeyboard;
-import com.sharetreats.chatbot.module.controller.dto.WelcomeMessage;
+import com.sharetreats.chatbot.module.controller.dto.welcomeDtos.WelcomeButton;
+import com.sharetreats.chatbot.module.controller.dto.welcomeDtos.WelcomeKeyboard;
+import com.sharetreats.chatbot.module.controller.dto.welcomeDtos.WelcomeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
