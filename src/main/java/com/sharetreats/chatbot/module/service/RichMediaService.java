@@ -1,13 +1,14 @@
 package com.sharetreats.chatbot.module.service;
 
+import com.sharetreats.chatbot.module.dto.GiftHistoryRedisHash;
 import com.sharetreats.chatbot.module.dto.ViberRichMediaMessage;
 import com.sharetreats.chatbot.module.entity.Brand;
 import com.sharetreats.chatbot.module.entity.Product;
 import com.sharetreats.chatbot.module.repository.BrandRepository;
 import com.sharetreats.chatbot.module.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,7 +25,7 @@ import static com.sharetreats.chatbot.module.dto.ViberRichMediaMessage.RichMedia
 public class RichMediaService {
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
-
+    private final RedisTemplate<String, Object> redisTemplate;
     public ResponseEntity<ViberRichMediaMessage> sendProductsByBrand(String receiverId, Long brandId, String auth_token) {
         Brand brand = brandRepository.findById(brandId).orElse(null);
         if (brand == null) {
@@ -111,8 +112,8 @@ public class RichMediaService {
         buyButton.put("Columns", 6);
         buyButton.put("Rows", 1);
         buyButton.put("ActionType", "reply");
-        buyButton.put("ActionBody", "Buy " + product.getId());
-        buyButton.put("Text", "<font color-#ffffff>Buy</font>");
+        buyButton.put("ActionBody", "send treats " + product.getId());
+        buyButton.put("Text", "<font color-#ffffff>Send Treats</font>");
         buyButton.put("TextSize", "large");
         buyButton.put("TextVAlign", "middle");
         buyButton.put("TextHAlign", "middle");
