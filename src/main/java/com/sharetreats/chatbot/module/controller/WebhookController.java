@@ -51,8 +51,8 @@ public class WebhookController {
     /**
      * Event 가 메시지일 때, 해당 메시지의 text 에 작성된 `키워드` 따라 기능을 수행
      * 키워드는 현재 9 가지 있습니다.
-     * @param callback
-     * @return ResponseEntity
+     * * @param callback
+     * * @return ResponseEntity
      */
     private ResponseEntity<?> sendResponseByTextInMessage(String callback) {
         String text = getTextToMessage(callback);
@@ -83,6 +83,6 @@ public class WebhookController {
 
     static class InputKeyword {
         public static final String BUY_USE_POINT = "use point";
-        public static final String VIEW_PRODUCTS_OF_BRAND = "brand name";
+        public static final String VIEW_PRODUCTS_OF_BRAND = "brandId";
     }
 }
