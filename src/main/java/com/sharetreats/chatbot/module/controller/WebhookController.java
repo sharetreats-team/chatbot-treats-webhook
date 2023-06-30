@@ -3,6 +3,7 @@ package com.sharetreats.chatbot.module.controller;
 import com.sharetreats.chatbot.module.controller.webhook.SendBrandKeyboardMessage;
 import com.sharetreats.chatbot.module.controller.webhook.SendPaymentResultMessage;
 import com.sharetreats.chatbot.module.controller.webhook.SendProductsOfBrand;
+import com.sharetreats.chatbot.module.controller.webhook.SendPurchaseInfo;
 import com.sharetreats.chatbot.module.controller.webhook.SendWelcomeMessage;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ public class WebhookController {
     private final SendPaymentResultMessage sendPaymentResultMessage;
     private final SendProductsOfBrand sendProductsOfBrand;
     private final SendBrandKeyboardMessage sendBrandKeyboardMessage;
+    private final SendPurchaseInfo sendPurchaseInfo;
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -57,12 +59,16 @@ public class WebhookController {
      */
     private ResponseEntity<?> sendResponseByTextInMessage(String callback) {
         String text = getTextToMessage(callback);
+        String trackingData = getTrackingDataToMessage(callback);
         if (isContains(text, BUY_USE_POINT))
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
             return sendProductsOfBrand.execute(callback);
         if (isContains(text, VIEW_BRANDS))
             return sendBrandKeyboardMessage.execute(callback);
+        if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData)) {
+            return sendPurchaseInfo.execute(callback);
+        }
 
         throw new IllegalArgumentException("어떠한 이벤트에도 해당하지 않는 문자입니다.");
     }
@@ -79,6 +85,19 @@ public class WebhookController {
         return new JSONObject(callback).getString("event");
     }
 
+    private static String getTrackingDataToMessage(String callback) {
+        JSONObject messageObject = new JSONObject(callback).getJSONObject("message");
+        String trackingData = "";
+        if(messageObject.has("tracking_data")) {
+            trackingData = messageObject.getString("tracking_data");
+        }
+        return trackingData;
+    }
+
+    private static boolean isTrackingDataValid(String trackingData) {
+        return trackingData.equals("name") || trackingData.equals("email") || trackingData.equals("message") || trackingData.equals("discount_code");
+    }
+
     static class EventType {
         public static final String CONVERSATION_STARTED = "conversation_started";
         public static final String MESSAGE = "message";
@@ -86,7 +105,8 @@ public class WebhookController {
 
     static class InputKeyword {
         public static final String BUY_USE_POINT = "use point";
-        public static final String VIEW_PRODUCTS_OF_BRAND = "brand name";
         public static final String VIEW_BRANDS = "show treats";
+        public static final String VIEW_PRODUCTS_OF_BRAND = "brandId";
+        public static final String SEND_TREATS = "send treats";
     }
 }
