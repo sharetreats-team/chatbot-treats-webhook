@@ -18,7 +18,7 @@ spring:
     password: ${RDS_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   redis:
     gift-history:
       host: ${ELASTICACHE_ENDPOINT}
@@ -28,11 +28,11 @@ cloud:
   aws:
     s3:
       bucket: stchatbotimagebucket
-    credentials:
-      access-key: ${AWS_ACCESS_KEY_ID}
-      secret-key: ${AWS_SECRET_ACCESS_KEY}
-    region:
-      static: ap-northeast-2
+      credentials:
+        accesskey: ${AWS_S3_ACCESS_KEY_ID}
+        secretkey: ${AWS_S3_SECRET_ACCESS_KEY}
+      region:
+        static: ap-northeast-2
     stack:
       auto: false
       
