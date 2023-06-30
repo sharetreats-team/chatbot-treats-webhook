@@ -1,13 +1,14 @@
-package com.sharetreats.chatbot.module.controller.dto;
+package com.sharetreats.chatbot.module.controller.dto.brandDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class WelcomeSender {
+@NoArgsConstructor
+public class BrandRequest {
+
     private String name;
-    private String avatar;
+    private String image;
 }
