@@ -1,9 +1,6 @@
 package com.sharetreats.chatbot.module.controller;
 
-import com.sharetreats.chatbot.module.controller.webhook.SendPaymentResultMessage;
-import com.sharetreats.chatbot.module.controller.webhook.SendProductsOfBrand;
-import com.sharetreats.chatbot.module.controller.webhook.SendPurchaseInfo;
-import com.sharetreats.chatbot.module.controller.webhook.SendWelcomeMessage;
+import com.sharetreats.chatbot.module.controller.webhook.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +28,7 @@ public class WebhookController {
     private final SendPaymentResultMessage sendPaymentResultMessage;
     private final SendProductsOfBrand sendProductsOfBrand;
     private final SendPurchaseInfo sendPurchaseInfo;
+    private final SendProductDetail sendproductDetail;
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -62,9 +60,10 @@ public class WebhookController {
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
             return sendProductsOfBrand.execute(callback);
-        if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData)) {
+        if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData))
             return sendPurchaseInfo.execute(callback);
-        }
+        if (isContains(text, VIEW_MORE))
+            return sendproductDetail.execute(callback);
 
         throw new IllegalArgumentException("어떠한 이벤트에도 해당하지 않는 문자입니다.");
     }
@@ -103,5 +102,6 @@ public class WebhookController {
         public static final String BUY_USE_POINT = "use point";
         public static final String VIEW_PRODUCTS_OF_BRAND = "brandId";
         public static final String SEND_TREATS = "send treats";
+        public static final String VIEW_MORE = "view more";
     }
 }
