@@ -1,10 +1,6 @@
 package com.sharetreats.chatbot.module.controller;
 
-import com.sharetreats.chatbot.module.controller.webhook.SendBrandKeyboardMessage;
-import com.sharetreats.chatbot.module.controller.webhook.SendPaymentResultMessage;
-import com.sharetreats.chatbot.module.controller.webhook.SendProductsOfBrand;
-import com.sharetreats.chatbot.module.controller.webhook.SendPurchaseInfo;
-import com.sharetreats.chatbot.module.controller.webhook.SendWelcomeMessage;
+import com.sharetreats.chatbot.module.controller.webhook.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.sharetreats.chatbot.module.controller.WebhookController.EventType.CONVERSATION_STARTED;
-import static com.sharetreats.chatbot.module.controller.WebhookController.EventType.MESSAGE;
+import static com.sharetreats.chatbot.module.controller.WebhookController.EventType.*;
 import static com.sharetreats.chatbot.module.controller.WebhookController.InputKeyword.*;
 
 /**
@@ -33,6 +28,7 @@ public class WebhookController {
     private final SendProductsOfBrand sendProductsOfBrand;
     private final SendBrandKeyboardMessage sendBrandKeyboardMessage;
     private final SendPurchaseInfo sendPurchaseInfo;
+    private final ManageSubscription manageSubscription;
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -44,10 +40,13 @@ public class WebhookController {
         String event = getEventValueToCallback(callback);
 
         if (event.equals(CONVERSATION_STARTED))
-            return sendWelcomeMessage.execute(callback);
+            return sendWelcomeMessage.execute();
         if (event.equals(MESSAGE))
             return sendResponseByTextInMessage(callback);
-
+        if (event.equals(UNSUBSCRIBED))
+            manageSubscription.unsubscribe(callback);
+        if (event.equals(SUBSCRIBED))
+            manageSubscription.validateReSubscription(callback);
         return null;
     }
 
@@ -64,8 +63,10 @@ public class WebhookController {
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
             return sendProductsOfBrand.execute(callback);
-        if (isContains(text, VIEW_BRANDS))
+        if (isContains(text, VIEW_BRANDS)) {
+            manageSubscription.validateAccount(callback);
             return sendBrandKeyboardMessage.execute(callback);
+        }
         if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData)) {
             return sendPurchaseInfo.execute(callback);
         }
@@ -101,6 +102,8 @@ public class WebhookController {
     static class EventType {
         public static final String CONVERSATION_STARTED = "conversation_started";
         public static final String MESSAGE = "message";
+        public static final String SUBSCRIBED = "subscribed";
+        public static final String UNSUBSCRIBED = "unsubscribed";
     }
 
     static class InputKeyword {
