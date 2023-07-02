@@ -16,7 +16,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Component
-public class SendWelcomeMessage extends ResponseEvent {
+public class SendWelcomeMessage {
 
     @Value("${viber.auth.token}")
     private String token;
@@ -27,8 +27,7 @@ public class SendWelcomeMessage extends ResponseEvent {
     @Value("${viber.welcome-media}")
     private String welcome_media;
 
-    @Override
-    public ResponseEntity<WelcomeMessage> execute(String callback) {
+    public ResponseEntity<WelcomeMessage> execute() {
         return ResponseEntity.ok(
                 WelcomeMessage.of("Viber Treats", avatar,"tracking_data", "picture",
                         "\uD83E\uDD73\uD83C\uDF89 Hello. Welcome to Viber Treats! We have various treats to send to your friends.\n" +
