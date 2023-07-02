@@ -1,4 +1,4 @@
-package com.sharetreats.chatbot.config;
+package com.sharetreats.chatbot.infra.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
