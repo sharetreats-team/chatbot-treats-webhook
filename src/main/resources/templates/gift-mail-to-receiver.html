@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>스터디올래</title>
+</head>
+<body>
+<div>
+	<p>안녕하세요. <span th:text="${receiverName}"></span> 님</p>
+	<p><span th:text="${senderName}"> </span> 님께서 선물을 보냈습니다.</p>
+	<br>
+
+</div>
+<h1> 제품 정보 </h1>
+<div><h2>상품 코드</h2></div>
+<div><p th:text="${giftCode}"></p></div>
+<div><p th:text="${message}">메시지</p></div>
+<div><p>사용만료 기한 : <span th:text="${expirationDate}"> </span> 까지 입니다.</p></div>
+<footer>
+	<small>쉐어트리츠 Viber ChatBOT 서비스 개발팀</small>
+</footer>
+</body>
+</html>
