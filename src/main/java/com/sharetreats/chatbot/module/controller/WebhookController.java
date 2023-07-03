@@ -34,6 +34,7 @@ public class WebhookController {
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
+     *
      * @param callback
      * @return ResponseEntity
      */
@@ -55,6 +56,7 @@ public class WebhookController {
     /**
      * Event 가 메시지일 때, 해당 메시지의 text 에 작성된 `키워드` 따라 기능을 수행
      * 키워드는 현재 9 가지 있습니다.
+     *
      * @param callback
      * @return ResponseEntity
      */
@@ -65,41 +67,42 @@ public class WebhookController {
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
             return sendProductsOfBrand.execute(callback);
-        if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData))
         if (isContains(text, VIEW_BRANDS)) {
             manageSubscription.validateAccount(callback);
             return sendBrandKeyboardMessage.execute(callback);
         }
-        if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData)) {
+        if (isContains(text, InputKeyword.SEND_TREATS) || isTrackingDataValid(trackingData)) {
             return sendPurchaseInfo.execute(callback);
-        if (isContains(text, VIEW_MORE))
+        }
+        if (isContains(text, VIEW_MORE)) {
             return sendproductDetail.execute(callback);
-
+        }
         throw new IllegalArgumentException("어떠한 이벤트에도 해당하지 않는 문자입니다.");
+
     }
 
-    private static boolean isContains(String text, String keyword) {
+    private static boolean isContains (String text, String keyword){
         return text.contains(keyword);
     }
 
-    private static String getTextToMessage(String callback) {
+    private static String getTextToMessage (String callback){
         return new JSONObject(callback).getJSONObject("message").getString("text");
     }
 
-    private static String getEventValueToCallback(String callback) {
+    private static String getEventValueToCallback (String callback){
         return new JSONObject(callback).getString("event");
     }
 
-    private static String getTrackingDataToMessage(String callback) {
+    private static String getTrackingDataToMessage (String callback){
         JSONObject messageObject = new JSONObject(callback).getJSONObject("message");
         String trackingData = "";
-        if(messageObject.has("tracking_data")) {
+        if (messageObject.has("tracking_data")) {
             trackingData = messageObject.getString("tracking_data");
         }
         return trackingData;
     }
 
-    private static boolean isTrackingDataValid(String trackingData) {
+    private static boolean isTrackingDataValid (String trackingData){
         return trackingData.equals("name") || trackingData.equals("email") || trackingData.equals("message") || trackingData.equals("discount_code");
     }
 
@@ -118,3 +121,4 @@ public class WebhookController {
         public static final String VIEW_MORE = "view more";
     }
 }
+

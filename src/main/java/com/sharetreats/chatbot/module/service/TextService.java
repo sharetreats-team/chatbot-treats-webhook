@@ -31,7 +31,6 @@ public class TextService {
 
             GiftHistoryRedisHash giftHistoryRedisHash = getGiftHistory(receiverId);
             giftHistoryRedisHash.setReceiverName(gifteeName);
-            giftHistoryRedisHash.setSenderId(receiverId);
             log.info(giftHistoryRedisHash.toString());
 
             saveGiftHistory(receiverId, giftHistoryRedisHash);
