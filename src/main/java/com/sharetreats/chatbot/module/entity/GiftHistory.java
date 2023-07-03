@@ -4,6 +4,7 @@ import com.sharetreats.chatbot.module.option.GiftAvailability;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class GiftHistory {
     private GiftAvailability availability;
 
     @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -54,6 +56,7 @@ public class GiftHistory {
     private GiftHistory(String receiverName, String receiverEmail, String message, int price, Account sender, Product product) {
         this.availability = GiftAvailability.AVAILABLE;
         this.giftCode = initGiftCode();
+        this.expirationDate = initExpirationDate();
         this.receiverName = receiverName;
         this.receiverEmail = receiverEmail;
         this.message = message;
