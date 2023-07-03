@@ -47,7 +47,7 @@ public class TextService {
             String gifteeEmail = messageText;
 
             GiftHistoryRedisHash giftHistoryRedisHash = getGiftHistory(receiverId);
-            giftHistoryRedisHash.setEmail(gifteeEmail);
+            giftHistoryRedisHash.setReceiverEmail(gifteeEmail);
             log.info(giftHistoryRedisHash.toString());
 
             saveGiftHistory(receiverId, giftHistoryRedisHash);

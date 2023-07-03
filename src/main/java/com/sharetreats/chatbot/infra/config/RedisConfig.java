@@ -9,8 +9,10 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 
 @Configuration
 public class RedisConfig {
+
     @Value("${spring.redis.gift-history.host}")
     private String redisHost;
+
     @Value("${spring.redis.gift-history.port}")
     private int redisPort;
 

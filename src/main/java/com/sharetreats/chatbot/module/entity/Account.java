@@ -50,9 +50,10 @@ public class Account implements Persistable<String> {
         return createdAt ==null;
     }
 
-    public void changeReSubscribed() {
-        this.subscription = Subscription.SUBSCRIBE;
-
+    public void changeReSubscribed(Subscription targetSubscription) {
+        if (targetSubscription.getKey().equals(Subscription.UNSUBSCRIBE.getKey())) {
+            this.subscription = Subscription.SUBSCRIBE;
+        }
     }
 
     public void changeUnsubscribed() {
@@ -61,5 +62,9 @@ public class Account implements Persistable<String> {
 
     public static Account of(String id, String name, String avatar, int point) {
         return new Account(id, name, avatar, point);
+    }
+
+    public void decreasePoint(int price) {
+        this.point -= price;
     }
 }

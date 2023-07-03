@@ -23,7 +23,19 @@ spring:
     gift-history:
       host: ${ELASTICACHE_ENDPOINT}
       port: 6379
-      
+  mail:
+    host: smtp.gmail.com
+    port: ${SMTP_PORT}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
 cloud:
   aws:
     s3:
