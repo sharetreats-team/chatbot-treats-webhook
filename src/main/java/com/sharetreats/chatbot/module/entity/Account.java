@@ -63,4 +63,8 @@ public class Account implements Persistable<String> {
     public static Account of(String id, String name, String avatar, int point) {
         return new Account(id, name, avatar, point);
     }
+
+    public void decreasePoint(int price) {
+        this.point -= price;
+    }
 }

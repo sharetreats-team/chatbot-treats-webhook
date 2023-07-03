@@ -1,5 +1,8 @@
 package com.sharetreats.chatbot.module.dto;
 
+import com.sharetreats.chatbot.module.entity.Account;
+import com.sharetreats.chatbot.module.entity.GiftHistory;
+import com.sharetreats.chatbot.module.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,24 +18,30 @@ import java.io.Serializable;
 @RedisHash
 public class GiftHistoryRedisHash implements Serializable {
 
-    private String giftCode;
     private String receiverName;
-    private String email;
+    private String receiverEmail;
     private String message;
-    private Integer point;
-    private String senderId;
+    private Integer price;
     private Long productId;
 
     @Override
     public String toString() {
         return "GiftHistoryRedisHash{" +
-                "giftCode='" + giftCode + '\'' +
                 ", receiverName='" + receiverName + '\'' +
-                ", email='" + email + '\'' +
+                ", email='" + receiverEmail + '\'' +
                 ", message='" + message + '\'' +
-                ", point=" + point +
-                ", senderId='" + senderId + '\'' +
+                ", point=" + price +
                 ", productId=" + productId +
                 '}';
+    }
+
+    public GiftHistory saveGiftHistoryWithSender(Account sender, Product product) {
+        return GiftHistory.of(
+                this.receiverName,
+                this.receiverEmail,
+                this.message,
+                this.price,
+                sender,
+                product);
     }
 }
