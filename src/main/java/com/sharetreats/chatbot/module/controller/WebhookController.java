@@ -28,7 +28,9 @@ public class WebhookController {
     private final SendProductsOfBrand sendProductsOfBrand;
     private final SendBrandKeyboardMessage sendBrandKeyboardMessage;
     private final SendPurchaseInfo sendPurchaseInfo;
+    private final SendProductDetail sendproductDetail;
     private final ManageSubscription manageSubscription;
+
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -63,13 +65,15 @@ public class WebhookController {
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
             return sendProductsOfBrand.execute(callback);
+        if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData))
         if (isContains(text, VIEW_BRANDS)) {
             manageSubscription.validateAccount(callback);
             return sendBrandKeyboardMessage.execute(callback);
         }
         if (isContains(text, SEND_TREATS) || isTrackingDataValid(trackingData)) {
             return sendPurchaseInfo.execute(callback);
-        }
+        if (isContains(text, VIEW_MORE))
+            return sendproductDetail.execute(callback);
 
         throw new IllegalArgumentException("어떠한 이벤트에도 해당하지 않는 문자입니다.");
     }
@@ -111,5 +115,6 @@ public class WebhookController {
         public static final String VIEW_BRANDS = "show treats";
         public static final String VIEW_PRODUCTS_OF_BRAND = "brandId";
         public static final String SEND_TREATS = "send treats";
+        public static final String VIEW_MORE = "view more";
     }
 }
