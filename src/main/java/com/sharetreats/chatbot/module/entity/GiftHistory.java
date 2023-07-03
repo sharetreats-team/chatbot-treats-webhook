@@ -82,6 +82,6 @@ public class GiftHistory {
      * @return 만료날짜
      */
     private LocalDateTime initExpirationDate() {
-        return LocalDateTime.MAX.plusMonths(1);
+        return LocalDateTime.now().plusMonths(1);
     }
 }

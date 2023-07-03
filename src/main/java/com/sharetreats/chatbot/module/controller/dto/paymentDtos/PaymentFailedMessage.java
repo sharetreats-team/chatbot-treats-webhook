@@ -32,6 +32,6 @@ public class PaymentFailedMessage {
                 new Sender("james", "https://ifh.cc/g/ybxotT.jpg"),
                 "tracking_data",
                 "text",
-                "결제에 실패했습니다.");
+                "포인트가 부적하여 결제에 실패했습니다.");
     }
 }
