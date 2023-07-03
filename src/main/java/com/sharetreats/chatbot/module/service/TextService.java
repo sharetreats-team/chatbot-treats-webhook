@@ -229,8 +229,8 @@ public class TextService {
     private ViberSimpleKeyboard createPurchaseKeyboard(String receiverId, Long productId) {
         ViberSimpleButton nextButton = ViberSimpleButton.builder()
                 .actionType("reply")
-                .actionBody("use point " + receiverId)
-                .text("Next")
+                .actionBody("use point")
+                .text("Point Payment")
                 .textSize("regular")
                 .build();
 
