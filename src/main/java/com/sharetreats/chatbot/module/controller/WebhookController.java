@@ -27,6 +27,7 @@ public class WebhookController {
     private final SendWelcomeMessage sendWelcomeMessage;
     private final SendPaymentResultMessage sendPaymentResultMessage;
     private final SendProductsOfBrand sendProductsOfBrand;
+    private final SendBrandKeyboardMessage sendBrandKeyboardMessage;
     private final SendPurchaseInfo sendPurchaseInfo;
     private final SendProductDetail sendproductDetail;
 
@@ -100,6 +101,7 @@ public class WebhookController {
 
     static class InputKeyword {
         public static final String BUY_USE_POINT = "use point";
+        public static final String VIEW_BRANDS = "show treats";
         public static final String VIEW_PRODUCTS_OF_BRAND = "brandId";
         public static final String SEND_TREATS = "send treats";
         public static final String VIEW_MORE = "view more";

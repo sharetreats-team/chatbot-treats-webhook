@@ -1,6 +1,6 @@
 package com.sharetreats.chatbot.module.controller.webhook;
 
-import com.sharetreats.chatbot.module.controller.dto.WelcomeMessageDto;
+import com.sharetreats.chatbot.module.controller.dto.Dto;
 import com.sharetreats.chatbot.module.service.ServiceTest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class SendPaymentResultMessage extends ResponseEvent {
     public ResponseEntity<?> execute(String callback) {
         service.test();
         return ResponseEntity.ok(
-                WelcomeMessageDto.builder()
+                Dto.builder()
                         .text("예시를 위한 dto 입니다. 확인 후 삭제해주세요.")
                         .build());
     }

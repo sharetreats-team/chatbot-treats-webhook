@@ -3,11 +3,11 @@ name: CI-CD
 on:
   push:
     branches:
-      - main
+      - test
 
 env:
   S3_BUCKET_NAME: stchatbotbucket
-  RESOURCE_PATH: ./src/main/resources/application.yml
+  RESOURCE_PATH: ./src/main/resources/application.yaml
   CODE_DEPLOY_APPLICATION_NAME: stchatbot-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: stchatbot-deploy
 
@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
@@ -26,8 +26,19 @@ jobs:
         
         
       - name: Set yaml file
-        run: envsubst < ./src/main/resources/application.yaml > ./src/main/resources/application.yml
-      
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.RESOURCE_PATH }}
+        env:
+          spring.datasource.url: ${{ secrets.RDS_URL }}
+          spring.datasource.username: ${{ secrets.RDS_USERNAME }}
+          spring.datasource.password: ${{ secrets.RDS_PASSWORD }}
+          spring.redis.gift-history.host: ${{ secrets.ELASTICACHE_ENDPOINT }}
+          cloud.aws.s3.credentials.accesskey: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
+          cloud.aws.s3.credentials.secretkey: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
+          viber.auth.token: ${{ secrets.VIBER_AUTH_TOKEN }}
+          viber.avatar: ${{ secrets.VIBER_AVATAR }}
+          viber.welcome-media: ${{ secrets.VIBER_WELCOME_MEDIA }}
       
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
