@@ -1,11 +1,10 @@
 package com.sharetreats.chatbot.module.service;
 
-import com.sharetreats.chatbot.module.dto.GiftHistoryRedisHash;
-import com.sharetreats.chatbot.module.dto.ViberTextMessage;
+import com.sharetreats.chatbot.module.dto.*;
 import com.sharetreats.chatbot.module.entity.DiscountCode;
+import com.sharetreats.chatbot.module.entity.Product;
 import com.sharetreats.chatbot.module.option.DiscountType;
 import com.sharetreats.chatbot.module.repository.DiscountCodeRepository;
-import com.sharetreats.chatbot.module.entity.Product;
 import com.sharetreats.chatbot.module.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +33,7 @@ public class TextService {
         this.discountCodeRepository = discountCodeRepository;
     }
 
-    public ResponseEntity<ViberTextMessage> sendMessage(String receiverId, String messageText, String trackingData, String authToken) {
+    public ResponseEntity<?> sendMessage(String receiverId, String messageText, String trackingData, String authToken) {
 
         ViberTextMessage viberTextMessage = null;
 
@@ -96,13 +96,21 @@ public class TextService {
 
                 saveGiftHistory(receiverId, giftHistoryRedisHash);
                 log.info(giftHistoryRedisHash.toString());
-                viberTextMessage = ViberTextMessage.builder()
+                ViberTextWithKeyboardMessage viberMessage = ViberTextWithKeyboardMessage.builder()
                         .receiver(receiverId)
                         .minApiVersion(1)
-                        .trackingData("completed")
+                        .trackingData("")
                         .type("text")
-                        .text("입력 완료")
+                        .text("선물 내용 확인\n" +
+                                "구입하시는 상품: " + giftHistoryRedisHash.getProductName() + "\n" +
+                                "결제 금액: " + giftHistoryRedisHash.getPrice() + " point\n" +
+                                "선물받는 사람: " + giftHistoryRedisHash.getReceiverName() + "\n" +
+                                "받는 사람 이메일: " + giftHistoryRedisHash.getReceiverEmail() + "\n" +
+                                "보낼 메시지: " + giftHistoryRedisHash.getMessage() + "\n\n" +
+                                "위 내용이 맞다면 next 버튼을, 다시 선물 정보를 입력하시려면 its wrong information 버튼을 클릭해주세요")
+                        .keyboard(createPurchaseKeyboard(receiverId, giftHistoryRedisHash.getProductId()))
                         .build();
+                return getViberTextWithKeyboardMessageResponseEntity(authToken, viberMessage);
             } else {
                 viberTextMessage = ViberTextMessage.builder()
                         .receiver(receiverId)
@@ -120,6 +128,7 @@ public class TextService {
                 Product product = productRepository.findById(productId).orElse(null);
                 if (product != null) {
                     giftHistoryRedisHash.setPrice(product.getDiscountPrice());
+                    giftHistoryRedisHash.setProductName(product.getName());
                 }
                 saveGiftHistory(receiverId, giftHistoryRedisHash);
 
@@ -137,6 +146,10 @@ public class TextService {
             throw new IllegalArgumentException("Invalid tracking data: " + trackingData);
         }
 
+        return getViberTextMessageResponseEntity(authToken, viberTextMessage);
+    }
+
+    private ResponseEntity<ViberTextMessage> getViberTextMessageResponseEntity(String authToken, ViberTextMessage viberTextMessage) {
         String sendUrl = "https://chatapi.viber.com/pa/send_message";
 
         HttpHeaders headers = new HttpHeaders();
@@ -149,6 +162,24 @@ public class TextService {
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             return ResponseEntity.ok(viberTextMessage);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    private ResponseEntity<ViberTextWithKeyboardMessage> getViberTextWithKeyboardMessageResponseEntity(String authToken, ViberTextWithKeyboardMessage viberTextWithKeyboardMessage) {
+        String sendUrl = "https://chatapi.viber.com/pa/send_message";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Viber-Auth-Token", authToken);
+
+        HttpEntity<ViberTextWithKeyboardMessage> httpEntity = new HttpEntity<>(viberTextWithKeyboardMessage, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(sendUrl, httpEntity, String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            return ResponseEntity.ok(viberTextWithKeyboardMessage);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -195,4 +226,28 @@ public class TextService {
 
         return originalPrice; // 할인이 적용되지 않은 경우 원래 가격을 반환합니다.
     }
+    private ViberSimpleKeyboard createPurchaseKeyboard(String receiverId, Long productId) {
+        ViberSimpleButton nextButton = ViberSimpleButton.builder()
+                .actionType("reply")
+                .actionBody("use point " + receiverId)
+                .text("Next")
+                .textSize("regular")
+                .build();
+
+        ViberSimpleButton wrongInfoButton = ViberSimpleButton.builder()
+                .actionType("reply")
+                .actionBody("send treats " + productId)
+                .text("It's wrong information")
+                .textSize("regular")
+                .build();
+
+        ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
+                .type("keyboard")
+                .defaultHeight(false)
+                .buttons(Arrays.asList(nextButton, wrongInfoButton))
+                .build();
+
+        return keyboard;
+    }
 }
+

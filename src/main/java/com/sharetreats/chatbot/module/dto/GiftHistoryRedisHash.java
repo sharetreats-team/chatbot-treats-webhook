@@ -19,15 +19,17 @@ public class GiftHistoryRedisHash implements Serializable {
     private String message;
     private Integer price;
     private Long productId;
+    private String productName;
 
     @Override
     public String toString() {
         return "GiftHistoryRedisHash{" +
-                ", receiverName='" + receiverName + '\'' +
-                ", email='" + receiverEmail + '\'' +
+                "receiverName='" + receiverName + '\'' +
+                ", receiverEmail='" + receiverEmail + '\'' +
                 ", message='" + message + '\'' +
-                ", point=" + price +
+                ", price=" + price +
                 ", productId=" + productId +
+                ", productName='" + productName + '\'' +
                 '}';
     }
 
