@@ -30,7 +30,7 @@ public class BrandService {
     public List<BrandButtons> createBrandButtons() {
         return brandRepository.findAll()
                 .stream()
-                .filter(brand -> brand.getStatus().getKey().equals(Status.ACTIVE))
+//                .filter(brand -> brand.getStatus().getKey().equals(Status.ACTIVE))
                 .map(b -> new BrandButtons(2,2,
                         "<br><font color=\\\"#494E67\\\"><b>" + b.getName() + "</b></font>",
                         "small", "center", "bottom", "reply",
