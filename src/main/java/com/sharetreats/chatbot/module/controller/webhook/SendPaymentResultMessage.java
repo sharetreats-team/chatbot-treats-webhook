@@ -6,6 +6,7 @@ import com.sharetreats.chatbot.module.controller.dto.paymentDtos.PaymentSuccessM
 import com.sharetreats.chatbot.module.entity.GiftHistory;
 import com.sharetreats.chatbot.module.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -19,6 +20,7 @@ import java.util.Optional;
 /**
  * 포인트 결제 요청에 대한 결과를 전송하는 클래스입니다.
  */
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class SendPaymentResultMessage extends ResponseEvent {
@@ -35,7 +37,9 @@ public class SendPaymentResultMessage extends ResponseEvent {
     @Override
     public ResponseEntity<?> execute(String callback) {
         String accountId = getAccountIdToCallback(callback);
+        log.info("use point 기능 정상 작동, account Id : {}", accountId);
         Optional<GiftHistory> result = paymentService.payWithPoints(accountId);
+        log.info("결제 기능 정상 수행 {}", result.isPresent() ? result.get().getPrice() : "포인트 부족으로 결제 실패");
         if(result.isPresent()) return sendSuccessMessage(result.get());
         else return sendFailedMessage(accountId);
     }
