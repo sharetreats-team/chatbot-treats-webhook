@@ -50,9 +50,10 @@ public class Account implements Persistable<String> {
         return createdAt ==null;
     }
 
-    public void changeReSubscribed() {
-        this.subscription = Subscription.SUBSCRIBE;
-
+    public void changeReSubscribed(Subscription targetSubscription) {
+        if (targetSubscription.getKey().equals(Subscription.UNSUBSCRIBE.getKey())) {
+            this.subscription = Subscription.SUBSCRIBE;
+        }
     }
 
     public void changeUnsubscribed() {
