@@ -5,7 +5,6 @@ import com.sharetreats.chatbot.module.entity.GiftHistory;
 import com.sharetreats.chatbot.module.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -13,8 +12,6 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @RedisHash
 public class GiftHistoryRedisHash implements Serializable {
 
@@ -23,15 +20,17 @@ public class GiftHistoryRedisHash implements Serializable {
     private String message;
     private Integer price;
     private Long productId;
+    private String productName;
 
     @Override
     public String toString() {
         return "GiftHistoryRedisHash{" +
-                ", receiverName='" + receiverName + '\'' +
-                ", email='" + receiverEmail + '\'' +
+                "receiverName='" + receiverName + '\'' +
+                ", receiverEmail='" + receiverEmail + '\'' +
                 ", message='" + message + '\'' +
-                ", point=" + price +
+                ", price=" + price +
                 ", productId=" + productId +
+                ", productName='" + productName + '\'' +
                 '}';
     }
 
@@ -44,4 +43,5 @@ public class GiftHistoryRedisHash implements Serializable {
                 sender,
                 product);
     }
+
 }
