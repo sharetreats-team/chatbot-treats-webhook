@@ -18,7 +18,7 @@ spring:
     password: ${RDS_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   redis:
     gift-history:
       host: ${ELASTICACHE_ENDPOINT}
