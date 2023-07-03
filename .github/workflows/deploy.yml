@@ -39,7 +39,10 @@ jobs:
           viber.auth.token: ${{ secrets.VIBER_AUTH_TOKEN }}
           viber.avatar: ${{ secrets.VIBER_AVATAR }}
           viber.welcome-media: ${{ secrets.VIBER_WELCOME_MEDIA }}
-      
+          spring.mail.host: parseInt(${{ secrets.SMTP_PORT}})
+          spring.mail.username: ${{ secrets.SMTP_USERNAME}}
+          spring.mail.password: ${{ secrets.SMTP_PASSWORD}}
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
