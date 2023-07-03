@@ -32,7 +32,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.json:json:20230618'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.thymeleaf:thymeleaf:3.1.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 
     annotationProcessor 'org.projectlombok:lombok'
