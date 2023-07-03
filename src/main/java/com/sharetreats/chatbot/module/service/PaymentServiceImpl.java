@@ -27,7 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final ProductRepository productRepository;
     private final GiftHistoryRepository giftHistoryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final EmailService emailService;
+    //private final EmailService emailService;
     private final TemplateEngine templateEngine;
 
     @Override
@@ -37,7 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (!isPayable(sender, priorGiftHistory)) return Optional.empty();
 
         GiftHistory finalGiftHistory = proceedPayment(sender, priorGiftHistory);
-        sendEmailToReceiverAboutGift(finalGiftHistory); // TODO 비동기 처리
+        //sendEmailToReceiverAboutGift(finalGiftHistory); // TODO 비동기 처리
         return Optional.of(giftHistoryRepository.save(finalGiftHistory));
     }
 
@@ -47,24 +47,24 @@ public class PaymentServiceImpl implements PaymentService {
         return gift.saveGiftHistoryWithSender(sender, product);
     }
 
-    private void sendEmailToReceiverAboutGift(GiftHistory giftHistory) {
-        String message = makeEmailMessageByTemplateEngine(giftHistory);
-        EmailMessage emailMessage = EmailMessage.builder()
-                .to(giftHistory.getReceiverEmail())
-                .subject("선물")
-                .message(message)
-                .build();
-        emailService.send(emailMessage);
-    }
+//    private void sendEmailToReceiverAboutGift(GiftHistory giftHistory) {
+//        String message = makeEmailMessageByTemplateEngine(giftHistory);
+//        EmailMessage emailMessage = EmailMessage.builder()
+//                .to(giftHistory.getReceiverEmail())
+//                .subject("선물")
+//                .message(message)
+//                .build();
+//        emailService.send(emailMessage);
+//    }
 
-    private String makeEmailMessageByTemplateEngine(GiftHistory giftHistory) {
-        Context context = new Context();
-        context.setVariable("receiverName", giftHistory.getReceiverName());
-        context.setVariable("senderName", giftHistory.getSender().getName());
-        context.setVariable("giftCode", giftHistory.getGiftCode());
-        context.setVariable("expirationDate", giftHistory.getExpirationDate());
-        return templateEngine.process("mail/gift-mail-to-receiver", context);
-    }
+//    private String makeEmailMessageByTemplateEngine(GiftHistory giftHistory) {
+//        Context context = new Context();
+//        context.setVariable("receiverName", giftHistory.getReceiverName());
+//        context.setVariable("senderName", giftHistory.getSender().getName());
+//        context.setVariable("giftCode", giftHistory.getGiftCode());
+//        context.setVariable("expirationDate", giftHistory.getExpirationDate());
+//        return templateEngine.process("mail/gift-mail-to-receiver", context);
+//    }
 
     private GiftHistoryRedisHash getGiftHistory(String key) {
         return (GiftHistoryRedisHash) redisTemplate.opsForValue().get(key);
