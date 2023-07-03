@@ -61,7 +61,7 @@ public class SendPaymentResultMessage extends ResponseEvent {
     private HttpHeaders setHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Viber-AuthToken", token);
+        headers.set("X-Viber-Auth-Token", token);
         return headers;
     }
 
