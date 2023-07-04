@@ -29,7 +29,7 @@ public class HtmlEmailService implements EmailService {
             mimeMessageHelper.setSubject(emailMessage.getSubject());
             mimeMessageHelper.setText(emailMessage.getMessage(), true); // 두번째 파라미터는 html 인지 여부
             javaMailSender.send(mimeMessage);
-            log.info("sent email: {}", emailMessage.getMessage());
+            log.info("sent email: {} to {}", emailMessage.getSubject(),emailMessage.getTo());
         } catch (MessagingException e) {
             log.error("failed to send email", e);
         }

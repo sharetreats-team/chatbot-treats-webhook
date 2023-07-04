@@ -14,7 +14,7 @@ import java.util.List;
 public class PayResultButtons {
 
     public static List<PayResultButtons> of(GiftHistory giftHistory) {
-        return List.of(ButtonsForImage.of(6, 1, "none", "none", getProductImage(giftHistory)),
+        return List.of(ButtonsForImage.of(6, 1, "none", "https://www.google.com", getProductImage(giftHistory)),
                 ButtonsForText.of(6, 1, "none", "상품제목", "<font color=#323232><b>" + getProductName(giftHistory) + "</b></font>", "large", "middle", "left"),
                 ButtonsForText.of(6, 1, "none", "브랜드명", "<font color=#323232>" + getBrandNameOfProduct(giftHistory) + "</font>", "small", "top", "left"),
                 ButtonsForText.of(6, 4, "none", "발신자명,메시지",
@@ -93,7 +93,6 @@ public class PayResultButtons {
 
         @JsonProperty("Rows")
         private int rows;
-
 
         @JsonProperty("ActionType")
         private String actionType;
