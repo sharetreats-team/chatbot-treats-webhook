@@ -29,10 +29,12 @@ public class SendPaymentResultMessage extends ResponseEvent {
 
     @Value("${viber.auth.token}")
     private String token;
+
+    @Value("${viber.avatar}")
+    private String avatar;
     
     private final PaymentService paymentService;
     private final RestTemplateConfig restTemplateConfig;
-
 
     @Override
     public ResponseEntity<?> execute(String callback) {
@@ -52,7 +54,7 @@ public class SendPaymentResultMessage extends ResponseEvent {
     }
 
     private ResponseEntity<?> sendFailedMessage(String id) {
-        PaymentFailedMessage response = PaymentFailedMessage.of(id);
+        PaymentFailedMessage response = PaymentFailedMessage.of(id, avatar);
         HttpHeaders headers = setHttpHeaders();
         HttpEntity<PaymentFailedMessage> httpEntity = new HttpEntity<>(response, headers);
         return restTemplateConfig.restTemplate().postForEntity(VIBER_SEND_MESSAGE_URL, httpEntity, String.class);

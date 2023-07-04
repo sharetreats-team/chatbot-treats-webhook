@@ -22,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 @Async
 public class GiftHistoryEmailListener {
 
-    private final GiftHistoryRepository giftHistoryRepository;
     private final EmailService emailService;
     private final TemplateEngine templateEngine;
 
@@ -30,13 +29,15 @@ public class GiftHistoryEmailListener {
     public void handleSendEmailEvent(GiftHistoryEmailEvent event) {
         log.info("email send event success!!");
 
-        GiftHistory giftHistoryToEvent = event.getGiftHistory();
-        GiftHistory giftHistory
-                = giftHistoryRepository.findGiftHistoryWithProductAndAccountById(giftHistoryToEvent.getId());
-        sendEmailToReceiverAboutGift(giftHistory);
+        GiftHistory giftHistory = event.getGiftHistory();
 
-        log.info("success email send to {} ({})"
-                , giftHistory.getReceiverName(), giftHistory.getReceiverEmail());
+        try {
+            sendEmailToReceiverAboutGift(giftHistory);
+
+            log.info("success email send to {} ({})", giftHistory.getReceiverName(), giftHistory.getReceiverEmail());
+        } catch (Exception e) {
+            log.error("Failed email send, ({})", e.getMessage());
+        }
     }
 
     private void sendEmailToReceiverAboutGift(GiftHistory giftHistory) {
