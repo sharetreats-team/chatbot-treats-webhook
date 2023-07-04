@@ -1,7 +1,12 @@
 package com.sharetreats.chatbot.module.controller.dto.paymentDtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sharetreats.chatbot.module.controller.dto.welcomeDtos.WelcomeButton;
+import com.sharetreats.chatbot.module.controller.dto.welcomeDtos.WelcomeKeyboard;
 import lombok.*;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * TYPE: TextMessage
@@ -16,7 +21,10 @@ public class PaymentFailedMessage {
     @JsonProperty("min_api_version")
     private int minApiVersion;
 
+
     private Sender sender;
+
+    private WelcomeKeyboard keyboard;
 
     @JsonProperty("tracking_data")
     private String trackingData;
@@ -30,8 +38,13 @@ public class PaymentFailedMessage {
                 id,
                 1,
                 new Sender("stchatbot3", avatar),
+                WelcomeKeyboard.of("keyboard", false,"#FFFFFF", createButtons()),
                 "tracking_data",
                 "text",
                 "[포인트 부족] 결제에 실패했습니다.");
+    }
+
+    public static List<WelcomeButton> createButtons() {
+        return Collections.singletonList(WelcomeButton.of());
     }
 }
