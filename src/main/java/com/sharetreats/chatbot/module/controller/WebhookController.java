@@ -67,12 +67,11 @@ public class WebhookController {
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
             return sendProductsOfBrand.execute(callback);
+        if (isContains(text, SEND_TREATS) || isContains(text, NO_DISCOUNT) || isTrackingDataValid(trackingData))
+          return sendPurchaseInfo.execute(callback);
         if (isContains(text, VIEW_BRANDS)) {
             manageSubscription.validateAccount(callback);
             return sendBrandKeyboardMessage.execute(callback);
-        }
-        if (isContains(text, InputKeyword.SEND_TREATS) || isTrackingDataValid(trackingData)) {
-            return sendPurchaseInfo.execute(callback);
         }
         if (isContains(text, VIEW_MORE)) {
             return sendproductDetail.execute(callback);
@@ -119,6 +118,7 @@ public class WebhookController {
         public static final String VIEW_PRODUCTS_OF_BRAND = "brandId";
         public static final String SEND_TREATS = "send treats";
         public static final String VIEW_MORE = "view more";
+        public static final String NO_DISCOUNT = "no discount";
     }
 }
 

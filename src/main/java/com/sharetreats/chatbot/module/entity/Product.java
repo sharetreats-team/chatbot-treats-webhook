@@ -16,19 +16,19 @@ public class Product {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column
+    @Column(nullable = false)
     private String image;
     @Column(nullable = false)
     private String status;
-    @Column
+    @Column(nullable = false)
     private String description;
     @Column(nullable = false)
     private Integer price;
-    @Column(name = "discount_price")
+    @Column(name = "discount_price", nullable = false)
     private Integer discountPrice;
-    @Column(name = "discount_shop")
+    @Column(name = "discount_shop", nullable = false)
     private String discountShop;
-    @Column(name = "brand_name")
+    @Column(name = "brand_name", nullable = false)
     private String brandName;
 
 }

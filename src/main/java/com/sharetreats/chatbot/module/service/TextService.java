@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,49 +78,47 @@ public class TextService {
 
             saveGiftHistory(receiverId, giftHistoryRedisHash);
 
+            ViberTextWithKeyboardMessage viberMessage = ViberTextWithKeyboardMessage.builder()
+                    .receiver(receiverId)
+                    .minApiVersion(1)
+                    .trackingData("discount_code")
+                    .type("text")
+                    .text("할인 코드를 입력해 주세요!\n 없으시면 no discount code를 눌러주세요!")
+                    .keyboard(createNoDiscountKeyboard())
+                    .build();
+            return sendTextWithKeyboardMessage(authToken, viberMessage);
+
+        } else if (trackingData.equals("discount_code")) {
+            String discountCode = messageText;
+            GiftHistoryRedisHash giftHistoryRedisHash = getGiftHistory(receiverId);
+            log.info(giftHistoryRedisHash.toString());
+            DiscountCode validDiscountCode = validateDiscountCode(discountCode);
+
+            if (validDiscountCode != null) {
+                int finalDiscountPrice = calculateDiscount(validDiscountCode, giftHistoryRedisHash.getPrice());
+                giftHistoryRedisHash.setPrice(finalDiscountPrice);
+                saveGiftHistory(receiverId, giftHistoryRedisHash);
+                log.info(giftHistoryRedisHash.toString());
+
+                ViberTextWithKeyboardMessage viberMessage = makePurchaseInfoMessage(receiverId, giftHistoryRedisHash);
+                return sendTextWithKeyboardMessage(authToken, viberMessage);
+            }
+
             viberTextMessage = ViberTextMessage.builder()
                     .receiver(receiverId)
                     .minApiVersion(1)
                     .trackingData("discount_code")
                     .type("text")
-                    .text("할인 코드를 입력해주세요")
+                    .text("유효하지 않은 할인 코드입니다. 다시 입력해주세요.")
                     .build();
-        } else if (trackingData.equals("discount_code")) {
 
-            String discountCode = messageText;
+        } else if (messageText.equals("no discount")) {
             GiftHistoryRedisHash giftHistoryRedisHash = getGiftHistory(receiverId);
             log.info(giftHistoryRedisHash.toString());
-            DiscountCode validDiscountCode = validateDiscountCode(discountCode);
-            if (validDiscountCode != null) {
-                int finalDiscountPrice = calculateDiscount(validDiscountCode, giftHistoryRedisHash.getPrice());
-                giftHistoryRedisHash.setPrice(finalDiscountPrice);
 
-                saveGiftHistory(receiverId, giftHistoryRedisHash);
-                log.info(giftHistoryRedisHash.toString());
-                ViberTextWithKeyboardMessage viberMessage = ViberTextWithKeyboardMessage.builder()
-                        .receiver(receiverId)
-                        .minApiVersion(1)
-                        .trackingData("")
-                        .type("text")
-                        .text("선물 내용 확인\n" +
-                                "구입하시는 상품: " + giftHistoryRedisHash.getProductName() + "\n" +
-                                "결제 금액: " + giftHistoryRedisHash.getPrice() + " point\n" +
-                                "선물받는 사람: " + giftHistoryRedisHash.getReceiverName() + "\n" +
-                                "받는 사람 이메일: " + giftHistoryRedisHash.getReceiverEmail() + "\n" +
-                                "보낼 메시지: " + giftHistoryRedisHash.getMessage() + "\n\n" +
-                                "위 내용이 맞다면 next 버튼을, 다시 선물 정보를 입력하시려면 its wrong information 버튼을 클릭해주세요")
-                        .keyboard(createPurchaseKeyboard(receiverId, giftHistoryRedisHash.getProductId()))
-                        .build();
-                return getViberTextWithKeyboardMessageResponseEntity(authToken, viberMessage);
-            } else {
-                viberTextMessage = ViberTextMessage.builder()
-                        .receiver(receiverId)
-                        .minApiVersion(1)
-                        .trackingData("discount_code")
-                        .type("text")
-                        .text("유효하지 않은 할인 코드입니다. 다시 입력해주세요.")
-                        .build();
-            }
+            ViberTextWithKeyboardMessage viberMessage = makePurchaseInfoMessage(receiverId, giftHistoryRedisHash);
+            return sendTextWithKeyboardMessage(authToken, viberMessage);
+
         } else if (trackingData.equals("")) {
             Long productId = findProductId(messageText);
             if (productId != null) {
@@ -146,10 +145,28 @@ public class TextService {
             throw new IllegalArgumentException("Invalid tracking data: " + trackingData);
         }
 
-        return getViberTextMessageResponseEntity(authToken, viberTextMessage);
+        return sendTextMessage(authToken, viberTextMessage);
     }
 
-    private ResponseEntity<ViberTextMessage> getViberTextMessageResponseEntity(String authToken, ViberTextMessage viberTextMessage) {
+    private ViberTextWithKeyboardMessage makePurchaseInfoMessage(String receiverId, GiftHistoryRedisHash giftHistoryRedisHash) {
+        ViberTextWithKeyboardMessage viberMessage = ViberTextWithKeyboardMessage.builder()
+                .receiver(receiverId)
+                .minApiVersion(1)
+                .trackingData("")
+                .type("text")
+                .text("선물 내용 확인\n" +
+                        "구입하시는 상품: " + giftHistoryRedisHash.getProductName() + "\n" +
+                        "결제 금액: " + giftHistoryRedisHash.getPrice() + " point\n" +
+                        "선물받는 사람: " + giftHistoryRedisHash.getReceiverName() + "\n" +
+                        "받는 사람 이메일: " + giftHistoryRedisHash.getReceiverEmail() + "\n" +
+                        "보낼 메시지: " + giftHistoryRedisHash.getMessage() + "\n\n" +
+                        "위 내용이 맞다면 next 버튼을, 다시 선물 정보를 입력하시려면 its wrong information 버튼을 클릭해주세요")
+                .keyboard(createPurchaseKeyboard(receiverId, giftHistoryRedisHash.getProductId()))
+                .build();
+        return viberMessage;
+    }
+
+    private ResponseEntity<ViberTextMessage> sendTextMessage(String authToken, ViberTextMessage viberTextMessage) {
         String sendUrl = "https://chatapi.viber.com/pa/send_message";
 
         HttpHeaders headers = new HttpHeaders();
@@ -167,7 +184,7 @@ public class TextService {
         }
     }
 
-    private ResponseEntity<ViberTextWithKeyboardMessage> getViberTextWithKeyboardMessageResponseEntity(String authToken, ViberTextWithKeyboardMessage viberTextWithKeyboardMessage) {
+    private ResponseEntity<ViberTextWithKeyboardMessage> sendTextWithKeyboardMessage(String authToken, ViberTextWithKeyboardMessage viberTextWithKeyboardMessage) {
         String sendUrl = "https://chatapi.viber.com/pa/send_message";
 
         HttpHeaders headers = new HttpHeaders();
@@ -245,6 +262,22 @@ public class TextService {
                 .type("keyboard")
                 .defaultHeight(false)
                 .buttons(Arrays.asList(nextButton, wrongInfoButton))
+                .build();
+
+        return keyboard;
+    }
+    private ViberSimpleKeyboard createNoDiscountKeyboard() {
+        ViberSimpleButton nextButton = ViberSimpleButton.builder()
+                .actionType("reply")
+                .actionBody("no discount")
+                .text("no discount")
+                .textSize("regular")
+                .build();
+
+        ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
+                .type("keyboard")
+                .defaultHeight(false)
+                .buttons(Collections.singletonList(nextButton))
                 .build();
 
         return keyboard;
