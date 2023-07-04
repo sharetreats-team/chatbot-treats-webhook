@@ -25,13 +25,13 @@ public class PaymentFailedMessage {
 
     private String text;
 
-    public static PaymentFailedMessage of(String id) {
+    public static PaymentFailedMessage of(String id, String avatar) {
         return new PaymentFailedMessage(
                 id,
                 1,
-                new Sender("james", "https://ifh.cc/g/ybxotT.jpg"),
+                new Sender("stchatbot3", avatar),
                 "tracking_data",
                 "text",
-                "포인트가 부적하여 결제에 실패했습니다.");
+                "[포인트 부족] 결제에 실패했습니다.");
     }
 }
