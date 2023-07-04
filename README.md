@@ -3,8 +3,8 @@
 ` 🎁 Viber 메신저 플랫폼의 '대화형 봇' 을 통한 모바일 선물하기 서비스 🎁 `
 
 * **프로젝트 명 : Viber 챗봇 기반 선물하기 서비스 구현**
-* **프로젝트 기간 : 2023.06.08 ~ 2023.07.07**
-* **Viber챗봇 링크**
+* **프로젝트 기간 : 2023.06.08 ~ 2023.07.10**
+* **Version : 1.0.0 - 진행중**
 
 > *설계 및 명세에 대한 내용은  `Wiki`를 참고해주세요.*
 > *[Wiki 바로가기](https://github.com/sharetreats-team/chatbot-treats-webhook/wiki)*
@@ -23,9 +23,10 @@
 ### 2) 세부 기술 스택
 
 - (ORM) JPA
-- Query DSL
-- Spring Mail
-- Viber bot
+- Spring Mail (Gmail SMTP)
+- JsonObject
+- SpringAsync
+- RestTemplate
 
 ### 3) 데이터베이스
 
@@ -34,8 +35,13 @@
 
 ### 4) 인프라
 
-- AWS EC2 (HTTPS 네트워크 구축)
+- AWS EC2 
+- Certificate Manager, ALB (HTTPS 네트워크 구축)
 - AWS RDS (MySQL)
+- ElastiCache Redis
+- S3 Image Bucket
+- Github Action
+- Code Deploy
 
 ### 5) VCS(Version Controller System) & etc
 
@@ -46,14 +52,8 @@
 
 ##  🅰 프로젝트 아키텍처
 
-### 1) 시스템 아키텍처
+![image](https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/0f01a1bc-f8f2-4393-a348-4228ccc55e55)
 
-![image (1)](https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/b48ed74c-c008-445d-9b62-f2a51c74c789)
-
-
-### 2) CI/CD
-
-<img alt="스크린샷 2023-06-19 오전 9 57 59" src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/fda52d09-ddb8-4007-9ce7-c211276528ae">
 
 <br>
 
@@ -124,9 +124,14 @@
 
 <br>
 
-## ⏯ Get started
+## ⏯ 구현 결과
 
-> 아래 방법을 통해 `챗봇 선물하기 서비스`를 경험할 수 있습니다.
+> (좌) 시연 영상, (우) 수신자 이메일로 전달되는 선물
+
+<p align="center">
+ <img src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/aebc7824-05a9-4f26-a93c-d2d1cadc51a0" width="290" alt="image">
+ <img width="380" alt="image" src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/da727bc9-98c4-4843-b0c7-d3c6c9b94a19">
+</p>
 
 <br>
 
