@@ -181,7 +181,7 @@ public class TextService {
 
     private ViberTextWithKeyboardMessage makeProductDetailMessage(String receiverId, Product product) {
         String text = String.format(
-                "브랜드명: %s<br>상품명: %s<br>상품 가격: %d<br>할인 가격: %d<br>상품 설명<br> %s",
+                "브랜드명: %s\n상품명: %s\n상품 가격: %d\n할인 가격: %d\n상품 설명\n%s",
                 product.getBrandName(),
                 product.getName(),
                 product.getPrice(),
@@ -294,7 +294,7 @@ public class TextService {
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
-                .bgColor("#800080")
+                .bgColor("#2DB9B9")
                 .buttons(Arrays.asList(nextButton, wrongInfoButton))
                 .build();
 
@@ -311,7 +311,7 @@ public class TextService {
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
-                .bgColor("#40E0D0")
+                .bgColor("#2DB9B9")
                 .buttons(singletonList(nextButton))
                 .build();
 
@@ -336,7 +336,7 @@ public class TextService {
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
-                .bgColor("#40E0D0")
+                .bgColor("#2DB9B9")
                 .buttons(Arrays.asList(sendTreatsButton, discountPlaceButton))
                 .build();
 
