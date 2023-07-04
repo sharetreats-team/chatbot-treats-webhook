@@ -88,6 +88,13 @@ public class TextService {
                     .build();
             return sendTextWithKeyboardMessage(authToken, viberMessage);
 
+        } else if (messageText.equals("no discount")) {
+            GiftHistoryRedisHash giftHistoryRedisHash = getGiftHistory(receiverId);
+            log.info(giftHistoryRedisHash.toString());
+
+            ViberTextWithKeyboardMessage viberMessage = makePurchaseInfoMessage(receiverId, giftHistoryRedisHash);
+            return sendTextWithKeyboardMessage(authToken, viberMessage);
+
         } else if (trackingData.equals("discount_code")) {
             String discountCode = messageText;
             GiftHistoryRedisHash giftHistoryRedisHash = getGiftHistory(receiverId);
@@ -111,13 +118,6 @@ public class TextService {
                     .type("text")
                     .text("유효하지 않은 할인 코드입니다. 다시 입력해주세요.")
                     .build();
-
-        } else if (messageText.equals("no discount")) {
-            GiftHistoryRedisHash giftHistoryRedisHash = getGiftHistory(receiverId);
-            log.info(giftHistoryRedisHash.toString());
-
-            ViberTextWithKeyboardMessage viberMessage = makePurchaseInfoMessage(receiverId, giftHistoryRedisHash);
-            return sendTextWithKeyboardMessage(authToken, viberMessage);
 
         } else if (trackingData.equals("")) {
             Long productId = findProductId(messageText);
