@@ -13,7 +13,10 @@ public class ViberSimpleKeyboard {
     private String type;
     @JsonProperty("DefaultHeight")
     private boolean defaultHeight;
+    @JsonProperty("BgColor")
+    private String bgColor;
     @JsonProperty("Buttons")
     private List<ViberSimpleButton> buttons;
+
 }
 

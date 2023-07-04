@@ -14,9 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Collections.*;
 
 @Service
 public class TextService {
@@ -34,7 +35,19 @@ public class TextService {
         this.discountCodeRepository = discountCodeRepository;
     }
 
-    public ResponseEntity<?> sendMessage(String receiverId, String messageText, String trackingData, String authToken) {
+    public ResponseEntity<?> sendProductDetailMessage(String receiverId, Long productId, String authToken) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        String sendUrl = "https://chatapi.viber.com/pa/send_message";
+        // 텍스트 키보드 메시지 만들고
+        // 보내기
+        ViberTextWithKeyboardMessage viberProductDetailMessage = makeProductDetailMessage(receiverId, product);
+        return sendTextWithKeyboardMessage(authToken, viberProductDetailMessage);
+    }
+
+    public ResponseEntity<?> sendPurchaseInfoInputMessage(String receiverId, String messageText, String trackingData, String authToken) {
 
         ViberTextMessage viberTextMessage = null;
 
@@ -83,7 +96,7 @@ public class TextService {
                     .minApiVersion(1)
                     .trackingData("discount_code")
                     .type("text")
-                    .text("할인 코드를 입력해 주세요!\n 없으시면 no discount code를 눌러주세요!")
+                    .text("할인 코드를 입력해 주세요!")
                     .keyboard(createNoDiscountKeyboard())
                     .build();
             return sendTextWithKeyboardMessage(authToken, viberMessage);
@@ -155,13 +168,33 @@ public class TextService {
                 .trackingData("")
                 .type("text")
                 .text("선물 내용 확인\n" +
-                        "구입하시는 상품: " + giftHistoryRedisHash.getProductName() + "\n" +
-                        "결제 금액: " + giftHistoryRedisHash.getPrice() + " point\n" +
-                        "선물받는 사람: " + giftHistoryRedisHash.getReceiverName() + "\n" +
-                        "받는 사람 이메일: " + giftHistoryRedisHash.getReceiverEmail() + "\n" +
-                        "보낼 메시지: " + giftHistoryRedisHash.getMessage() + "\n\n" +
-                        "위 내용이 맞다면 next 버튼을, 다시 선물 정보를 입력하시려면 its wrong information 버튼을 클릭해주세요")
+                        "구입하시는 상품:\n" + giftHistoryRedisHash.getProductName() + "\n" +
+                        "결제 금액:\n" + giftHistoryRedisHash.getPrice() + " point\n" +
+                        "선물받는 사람:\n" + giftHistoryRedisHash.getReceiverName() + "\n" +
+                        "받는 사람 이메일:\n" + giftHistoryRedisHash.getReceiverEmail() + "\n" +
+                        "보낼 메시지:\n" + giftHistoryRedisHash.getMessage() + "\n\n" +
+                        "위 내용이 맞다면 Point Payment, 다시 입력하시려면 Wrong Information 버튼을 클릭해주세요")
                 .keyboard(createPurchaseKeyboard(receiverId, giftHistoryRedisHash.getProductId()))
+                .build();
+        return viberMessage;
+    }
+
+    private ViberTextWithKeyboardMessage makeProductDetailMessage(String receiverId, Product product) {
+        String text = String.format(
+                "브랜드명: %s<br>상품명: %s<br>상품 가격: %d<br>할인 가격: %d<br>상품 설명<br> %s",
+                product.getBrandName(),
+                product.getName(),
+                product.getPrice(),
+                product.getDiscountPrice(),
+                product.getDescription()
+        );
+        ViberTextWithKeyboardMessage viberMessage = ViberTextWithKeyboardMessage.builder()
+                .receiver(receiverId)
+                .minApiVersion(1)
+                .trackingData("")
+                .type("text")
+                .text(text)
+                .keyboard(createProductDetailKeyboard(product))
                 .build();
         return viberMessage;
     }
@@ -254,13 +287,14 @@ public class TextService {
         ViberSimpleButton wrongInfoButton = ViberSimpleButton.builder()
                 .actionType("reply")
                 .actionBody("send treats " + productId)
-                .text("It's wrong information")
+                .text("Wrong Information")
                 .textSize("regular")
                 .build();
 
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
+                .bgColor("#800080")
                 .buttons(Arrays.asList(nextButton, wrongInfoButton))
                 .build();
 
@@ -270,14 +304,40 @@ public class TextService {
         ViberSimpleButton nextButton = ViberSimpleButton.builder()
                 .actionType("reply")
                 .actionBody("no discount")
-                .text("no discount")
+                .text("No Code")
                 .textSize("regular")
                 .build();
 
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
-                .buttons(Collections.singletonList(nextButton))
+                .bgColor("#40E0D0")
+                .buttons(singletonList(nextButton))
+                .build();
+
+        return keyboard;
+    }
+
+    private ViberSimpleKeyboard createProductDetailKeyboard(Product product) {
+        ViberSimpleButton sendTreatsButton = ViberSimpleButton.builder()
+                .actionType("reply")
+                .actionBody("send treats " + product.getId())
+                .text("BUY")
+                .textSize("regular")
+                .build();
+
+        ViberSimpleButton discountPlaceButton = ViberSimpleButton.builder()
+                .actionType("open-url")
+                .actionBody(product.getDiscountShop())
+                .text("GO DISCOUNT PLACE")
+                .textSize("regular")
+                .build();
+
+        ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
+                .type("keyboard")
+                .defaultHeight(false)
+                .bgColor("#40E0D0")
+                .buttons(Arrays.asList(sendTreatsButton, discountPlaceButton))
                 .build();
 
         return keyboard;

@@ -32,7 +32,7 @@ public class SendPurchaseInfo extends ResponseEvent{
         }
 
         log.info(messageObject.toString());
-        return textService.sendMessage(senderId, messageText, trackingData, viberAuthToken);
+        return textService.sendPurchaseInfoInputMessage(senderId, messageText, trackingData, viberAuthToken);
     }
 
     private Long findProductId(String messageText) {
