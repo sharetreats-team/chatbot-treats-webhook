@@ -3,6 +3,7 @@ package com.sharetreats.chatbot.module.dto;
 import com.sharetreats.chatbot.module.entity.Account;
 import com.sharetreats.chatbot.module.entity.GiftHistory;
 import com.sharetreats.chatbot.module.entity.Product;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
@@ -42,4 +43,5 @@ public class GiftHistoryRedisHash implements Serializable {
                 sender,
                 product);
     }
+
 }
