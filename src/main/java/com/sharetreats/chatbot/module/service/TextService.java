@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +35,19 @@ public class TextService {
         this.discountCodeRepository = discountCodeRepository;
     }
 
-    public ResponseEntity<?> sendMessage(String receiverId, String messageText, String trackingData, String authToken) {
+    public ResponseEntity<?> sendProductDetailMessage(String receiverId, Long productId, String authToken) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        String sendUrl = "https://chatapi.viber.com/pa/send_message";
+        // 텍스트 키보드 메시지 만들고
+        // 보내기
+        ViberTextWithKeyboardMessage viberProductDetailMessage = makeProductDetailMessage(receiverId, product);
+        return sendTextWithKeyboardMessage(authToken, viberProductDetailMessage);
+    }
+
+    public ResponseEntity<?> sendPurchaseInfoInputMessage(String receiverId, String messageText, String trackingData, String authToken) {
 
         ViberTextMessage viberTextMessage = null;
 
@@ -168,6 +179,26 @@ public class TextService {
         return viberMessage;
     }
 
+    private ViberTextWithKeyboardMessage makeProductDetailMessage(String receiverId, Product product) {
+        String text = String.format(
+                "브랜드명: %s<br>상품명: %s<br>상품 가격: %d<br>할인 가격: %d<br>상품 설명<br> %s",
+                product.getBrandName(),
+                product.getName(),
+                product.getPrice(),
+                product.getDiscountPrice(),
+                product.getDescription()
+        );
+        ViberTextWithKeyboardMessage viberMessage = ViberTextWithKeyboardMessage.builder()
+                .receiver(receiverId)
+                .minApiVersion(1)
+                .trackingData("")
+                .type("text")
+                .text(text)
+                .keyboard(createProductDetailKeyboard(product))
+                .build();
+        return viberMessage;
+    }
+
     private ResponseEntity<ViberTextMessage> sendTextMessage(String authToken, ViberTextMessage viberTextMessage) {
         String sendUrl = "https://chatapi.viber.com/pa/send_message";
 
@@ -263,6 +294,7 @@ public class TextService {
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
+                .bgColor("#800080")
                 .buttons(Arrays.asList(nextButton, wrongInfoButton))
                 .build();
 
@@ -279,7 +311,33 @@ public class TextService {
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
+                .bgColor("#40E0D0")
                 .buttons(singletonList(nextButton))
+                .build();
+
+        return keyboard;
+    }
+
+    private ViberSimpleKeyboard createProductDetailKeyboard(Product product) {
+        ViberSimpleButton sendTreatsButton = ViberSimpleButton.builder()
+                .actionType("reply")
+                .actionBody("send treats " + product.getId())
+                .text("BUY")
+                .textSize("regular")
+                .build();
+
+        ViberSimpleButton discountPlaceButton = ViberSimpleButton.builder()
+                .actionType("open-url")
+                .actionBody(product.getDiscountShop())
+                .text("GO DISCOUNT PLACE")
+                .textSize("regular")
+                .build();
+
+        ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
+                .type("keyboard")
+                .defaultHeight(false)
+                .bgColor("#40E0D0")
+                .buttons(Arrays.asList(sendTreatsButton, discountPlaceButton))
                 .build();
 
         return keyboard;
