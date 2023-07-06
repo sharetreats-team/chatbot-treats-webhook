@@ -1,5 +1,6 @@
 package com.sharetreats.chatbot.module.controller;
 
+import com.sharetreats.chatbot.infra.config.TokenConfig;
 import com.sharetreats.chatbot.module.controller.webhook.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
@@ -30,7 +31,8 @@ public class WebhookController {
     private final SendPurchaseInfo sendPurchaseInfo;
     private final SendProductDetail sendproductDetail;
     private final ManageSubscription manageSubscription;
-
+    private final TokenConfig tokenConfig;
+    private final SendInvalidTokenMessage sendInvalidTokenMessage;
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -42,10 +44,17 @@ public class WebhookController {
     public ResponseEntity<?> webhook(@RequestBody String callback) {
         String event = getEventValueToCallback(callback);
 
-        if (event.equals(CONVERSATION_STARTED))
+        if (event.equals(CONVERSATION_STARTED)) {
+            String accountId = getUserId(callback);
+            tokenConfig.generateToken(accountId);
             return sendWelcomeMessage.execute();
-        if (event.equals(MESSAGE))
-            return sendResponseByTextInMessage(callback);
+        }
+        if (event.equals(MESSAGE)) {
+            String accountId = getSenderId(callback);
+            boolean isValidToken = tokenConfig.validateToken(accountId);
+            if (isValidToken) sendResponseByTextInMessage(callback);
+            else return sendInvalidTokenMessage.execute(accountId);
+        }
         if (event.equals(UNSUBSCRIBED))
             manageSubscription.unsubscribe(callback);
         if (event.equals(SUBSCRIBED))
@@ -99,6 +108,16 @@ public class WebhookController {
             trackingData = messageObject.getString("tracking_data");
         }
         return trackingData;
+    }
+
+    private static String getUserId (String callback) {
+        JSONObject accountObject = new JSONObject(callback).getJSONObject("user");
+        return accountObject.getString("id");
+    }
+
+    private static String getSenderId (String callback) {
+        JSONObject accountObject = new JSONObject(callback).getJSONObject("sender");
+        return accountObject.getString("id");
     }
 
     private static boolean isTrackingDataValid (String trackingData){

@@ -23,6 +23,10 @@ spring:
     gift-history:
       host: ${ELASTICACHE_ENDPOINT}
       port: 6379
+    token:
+      host: ${ELASTICACHE_TOKEN_ENDPOINT}
+      port: 6380
+
   mail:
     host: smtp.gmail.com
     port: 587
