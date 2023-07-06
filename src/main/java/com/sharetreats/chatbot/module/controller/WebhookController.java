@@ -33,7 +33,7 @@ public class WebhookController {
     private final ManageSubscription manageSubscription;
     private final TokenConfig tokenConfig;
     private final SendInvalidTokenMessage sendInvalidTokenMessage;
-
+    private final sendCategoryKeyboard sendCategoryKeyboard;
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
      *
@@ -80,7 +80,10 @@ public class WebhookController {
           return sendPurchaseInfo.execute(callback);
         if (isContains(text, VIEW_BRANDS)) {
             manageSubscription.validateAccount(callback);
-            return sendBrandKeyboardMessage.execute(callback);
+            return sendCategoryKeyboard.execute(callback);
+        }
+        if (isContains(text, VIEW_BRANDS_CATEGORY)) {
+            return sendBrandKeyboardMessage.execute(callback, text);
         }
         if (isContains(text, VIEW_MORE)) {
             return sendproductDetail.execute(callback);
@@ -138,6 +141,7 @@ public class WebhookController {
         public static final String SEND_TREATS = "send treats";
         public static final String VIEW_MORE = "view more";
         public static final String NO_DISCOUNT = "no discount";
+        public static final String VIEW_BRANDS_CATEGORY = "categoryId";
     }
 }
 
