@@ -19,7 +19,7 @@ public class TokenConfig {
     public void generateToken(String userId) {
 
         String token = UUID.randomUUID().toString();
-        Duration expireDuration = Duration.ofMinutes(20);
+        Duration expireDuration = Duration.ofMinutes(5);
         redisTemplate.opsForValue().set(userId, token, expireDuration);
 
     }
