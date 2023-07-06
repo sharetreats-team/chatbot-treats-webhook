@@ -45,15 +45,16 @@ public class WebhookController {
         String event = getEventValueToCallback(callback);
 
         if (event.equals(CONVERSATION_STARTED)) {
-            String accountId = getUserId(callback);
-            tokenConfig.generateToken(accountId);
+            //String accountId = getUserId(callback);
+            //tokenConfig.generateToken(accountId);
             return sendWelcomeMessage.execute();
         }
         if (event.equals(MESSAGE)) {
-            String accountId = getSenderId(callback);
-            boolean isValidToken = tokenConfig.validateToken(accountId);
-            if (isValidToken) sendResponseByTextInMessage(callback);
-            else return sendInvalidTokenMessage.execute(accountId);
+            //String accountId = getSenderId(callback);
+            //boolean isValidToken = tokenConfig.validateToken(accountId);
+            //if (isValidToken)
+            return sendResponseByTextInMessage(callback);
+            //else return sendInvalidTokenMessage.execute(accountId);
         }
         if (event.equals(UNSUBSCRIBED))
             manageSubscription.unsubscribe(callback);
