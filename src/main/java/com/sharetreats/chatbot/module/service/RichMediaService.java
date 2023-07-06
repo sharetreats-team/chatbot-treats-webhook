@@ -40,15 +40,6 @@ public class RichMediaService {
 
     }
 
-    public ResponseEntity<ViberRichMediaMessage> sendProductDetail(String receiverId, Long productId, String authToken) {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        String sendUrl = "https://chatapi.viber.com/pa/send_message";
-        ViberRichMediaMessage richMediaMessage = convertToRichMediaMessages(product);
-        return sendRichMediaMessage(receiverId, authToken, sendUrl, richMediaMessage);
-    }
-
     private ResponseEntity<ViberRichMediaMessage> sendRichMediaMessage(String receiverId, String authToken, String sendUrl, ViberRichMediaMessage richMediaMessage) {
         richMediaMessage.setReceiver(receiverId);
 
@@ -87,7 +78,7 @@ public class RichMediaService {
                 .type("rich_media")
                 .buttonsGroupColumns(6)
                 .buttonsGroupRows(7)
-                .bgColor("#FFFFFF")
+                .bgColor("#F2F2F2")
                 .buttons(buttons)
                 .build();
 
@@ -97,35 +88,6 @@ public class RichMediaService {
                 .richMedia(richMedia)
                 .build();
     }
-
-    public ViberRichMediaMessage convertToRichMediaMessages(Product product) {
-        List<Map<String, Object>> buttons = new ArrayList<>();
-
-        Map<String, Object> productDetailInfo = new LinkedHashMap<>();
-        makeProductDetailInfo(buttons, product, productDetailInfo);
-
-        Map<String, Object> sendTreatsButton = new LinkedHashMap<>();
-        makeSendTreatsButton(buttons, product, sendTreatsButton);
-
-        Map<String, Object> sendDiscountShopButton = new LinkedHashMap<>();
-        makeDiscountPlaceButton(buttons, product, sendDiscountShopButton);
-
-
-        RichMedia richMedia = RichMedia.builder()
-                .type("rich_media")
-                .buttonsGroupColumns(6)
-                .buttonsGroupRows(7)
-                .bgColor("#FFFFFF")
-                .buttons(buttons)
-                .build();
-
-        return ViberRichMediaMessage.builder()
-                .minApiVersion(7)
-                .type("rich_media")
-                .richMedia(richMedia)
-                .build();
-    }
-
 
     private void makeProductImage(List<Map<String, Object>> buttons, Product product, Map<String, Object> image) {
         image.put("Columns", 6);
@@ -140,7 +102,7 @@ public class RichMediaService {
     private void makeProductText(List<Map<String, Object>> buttons, Product product, Map<String, Object> productText) {
         productText.put("Columns", 6);
         productText.put("Rows", 2);
-        productText.put("Text", "<font color=#323232><b>" + product.getBrandName() + "</b></font><font color=#777777><br>" + product.getName() + " </font><font color=#6fc133>" + product.getDiscountPrice() + "</font>");
+        productText.put("Text", "<font color=#323232><b>" + product.getBrandName() + "</b></font><font color=#777777><br>" + product.getName() + " </font><font color=#6fc133><br>" + product.getDiscountPrice() + "</font>");
         productText.put("ActionType", "open-url");
         productText.put("ActionBody", "https://www.google.com");
         productText.put("TextSize", "medium");
@@ -155,6 +117,7 @@ public class RichMediaService {
         buyButton.put("Rows", 1);
         buyButton.put("ActionType", "reply");
         buyButton.put("ActionBody", "send treats " + product.getId());
+        buyButton.put("Color", "#29A7D9");
         buyButton.put("Text", "<font color=#ffffff>Send Treats</font>");
         buyButton.put("TextSize", "medium");
         buyButton.put("TextVAlign", "middle");
@@ -168,6 +131,7 @@ public class RichMediaService {
         detailButton.put("Rows", 1);
         detailButton.put("ActionType", "reply");
         detailButton.put("ActionBody", "view more " + product.getId());
+        detailButton.put("Color", "#29A7D9");
         detailButton.put("Text", "<font color=#ffffff>view more</font>");
         detailButton.put("TextSize", "medium");
         detailButton.put("TextVAlign", "middle");
@@ -176,38 +140,4 @@ public class RichMediaService {
         buttons.add(detailButton);
     }
 
-    private void makeProductDetailInfo(List<Map<String, Object>> buttons, Product product, Map<String, Object> productText) {
-        String text = String.format(
-                "브랜드명: %s<br>상품명: %s<br>상품 가격: %d<br>할인 가격: %d<br>상품 설명<br> %s",
-                product.getBrandName(),
-                product.getName(),
-                product.getPrice(),
-                product.getDiscountPrice(),
-                product.getDescription()
-        );
-
-        productText.put("Columns", 6);
-        productText.put("Rows", 4);
-        productText.put("Text", text);
-        productText.put("ActionType", "open-url");
-        productText.put("ActionBody", product.getDiscountShop());
-        productText.put("TextSize", "medium");
-        productText.put("TextVAlign", "middle");
-        productText.put("TextHAlign", "left");
-
-        buttons.add(productText);
-    }
-
-    private void makeDiscountPlaceButton(List<Map<String, Object>> buttons, Product product, Map<String, Object> discountShopButton) {
-        discountShopButton.put("Columns", 6);
-        discountShopButton.put("Rows", 1);
-        discountShopButton.put("ActionType", "open-url");
-        discountShopButton.put("ActionBody", product.getDiscountShop());
-        discountShopButton.put("Text", "<font color=#ffffff>Discount Place</font>");
-        discountShopButton.put("TextSize", "medium");
-        discountShopButton.put("TextVAlign", "middle");
-        discountShopButton.put("TextHAlign", "middle");
-
-        buttons.add(discountShopButton);
-    }
 }
