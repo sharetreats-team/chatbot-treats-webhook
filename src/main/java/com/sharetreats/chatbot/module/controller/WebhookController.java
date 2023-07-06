@@ -1,6 +1,6 @@
 package com.sharetreats.chatbot.module.controller;
 
-//import com.sharetreats.chatbot.infra.config.TokenConfig;
+import com.sharetreats.chatbot.infra.config.TokenConfig;
 import com.sharetreats.chatbot.module.controller.webhook.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
@@ -31,8 +31,8 @@ public class WebhookController {
     private final SendPurchaseInfo sendPurchaseInfo;
     private final SendProductDetail sendproductDetail;
     private final ManageSubscription manageSubscription;
-//    private final TokenConfig tokenConfig;
-//    private final SendInvalidTokenMessage sendInvalidTokenMessage;
+    private final TokenConfig tokenConfig;
+    private final SendInvalidTokenMessage sendInvalidTokenMessage;
     private final sendCategoryKeyboard sendCategoryKeyboard;
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
@@ -45,16 +45,16 @@ public class WebhookController {
         String event = getEventValueToCallback(callback);
 
         if (event.equals(CONVERSATION_STARTED)) {
-            //String accountId = getUserId(callback);
-            //tokenConfig.generateToken(accountId);
+            String accountId = getUserId(callback);
+            tokenConfig.generateToken(accountId);
             return sendWelcomeMessage.execute();
         }
         if (event.equals(MESSAGE)) {
-            //String accountId = getSenderId(callback);
-            //boolean isValidToken = tokenConfig.validateToken(accountId);
-            //if (isValidToken)
+            String accountId = getSenderId(callback);
+            boolean isValidToken = tokenConfig.validateToken(accountId);
+            if (isValidToken)
             return sendResponseByTextInMessage(callback);
-            //else return sendInvalidTokenMessage.execute(accountId);
+            else return sendInvalidTokenMessage.execute(accountId);
         }
         if (event.equals(UNSUBSCRIBED))
             manageSubscription.unsubscribe(callback);
