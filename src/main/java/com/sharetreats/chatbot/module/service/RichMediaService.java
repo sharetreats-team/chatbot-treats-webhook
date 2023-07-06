@@ -117,7 +117,7 @@ public class RichMediaService {
         buyButton.put("Rows", 1);
         buyButton.put("ActionType", "reply");
         buyButton.put("ActionBody", "send treats " + product.getId());
-        buyButton.put("Color", "#29A7D9");
+        buyButton.put("BgColor", "#29A7D9");
         buyButton.put("Text", "<font color=#ffffff>Send Treats</font>");
         buyButton.put("TextSize", "medium");
         buyButton.put("TextVAlign", "middle");
@@ -131,7 +131,7 @@ public class RichMediaService {
         detailButton.put("Rows", 1);
         detailButton.put("ActionType", "reply");
         detailButton.put("ActionBody", "view more " + product.getId());
-        detailButton.put("Color", "#29A7D9");
+        detailButton.put("BgColor", "#29A7D9");
         detailButton.put("Text", "<font color=#ffffff>view more</font>");
         detailButton.put("TextSize", "medium");
         detailButton.put("TextVAlign", "middle");
