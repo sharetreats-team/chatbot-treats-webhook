@@ -1,6 +1,6 @@
 package com.sharetreats.chatbot.module.controller;
 
-import com.sharetreats.chatbot.infra.config.TokenConfig;
+//import com.sharetreats.chatbot.infra.config.TokenConfig;
 import com.sharetreats.chatbot.module.controller.webhook.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
@@ -31,8 +31,8 @@ public class WebhookController {
     private final SendPurchaseInfo sendPurchaseInfo;
     private final SendProductDetail sendproductDetail;
     private final ManageSubscription manageSubscription;
-    private final TokenConfig tokenConfig;
-    private final SendInvalidTokenMessage sendInvalidTokenMessage;
+//    private final TokenConfig tokenConfig;
+//    private final SendInvalidTokenMessage sendInvalidTokenMessage;
 
     /**
      * Webhook CallBack Data 를 받는 `MAIN API`
