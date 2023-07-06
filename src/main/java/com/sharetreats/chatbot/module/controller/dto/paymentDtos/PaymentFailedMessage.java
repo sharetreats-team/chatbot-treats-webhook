@@ -41,7 +41,7 @@ public class PaymentFailedMessage {
                 WelcomeKeyboard.of("keyboard", false,"#FFFFFF", createButtons()),
                 "tracking_data",
                 "text",
-                "[포인트 부족] 결제에 실패했습니다.");
+                "Payment declined due to insufficient points.");
     }
 
     public static List<WelcomeButton> createButtons() {
