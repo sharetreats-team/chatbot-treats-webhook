@@ -40,7 +40,7 @@ public class WelcomeButton {
     private String textSize;
 
     public static WelcomeButton of () {
-        return new WelcomeButton(6, 1, "#2db9b9", "reply", "show treats",
+        return new WelcomeButton(6, 1, "#29A7D9", "reply", "show treats",
                 "Show Treats", "center", "middle", "large");
     }
 }

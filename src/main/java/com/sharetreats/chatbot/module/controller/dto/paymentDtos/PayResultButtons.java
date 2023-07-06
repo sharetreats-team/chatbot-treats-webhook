@@ -16,17 +16,17 @@ public class PayResultButtons {
     public static List<PayResultButtons> of(GiftHistory giftHistory) {
         return List.of(
                 ButtonsForImage.of(6, 1, "none", "https://www.google.com", getProductImage(giftHistory)),
-                ButtonsForText.of(6, 1, "none", "상품제목", "<font color=#323232><b>[결제완료]</b></font><br><font color=#323232><b>" + getProductName(giftHistory) + "</b></font>", "large", "middle", "left"),
+                ButtonsForText.of(6, 1, "none", "상품제목", "<font color=#323232><b>[Purchased]</b></font><br><font color=#323232><b>" + getProductName(giftHistory) + "</b></font>", "large", "middle", "left"),
                 ButtonsForText.of(6, 1, "none", "브랜드명", "<font color=#323232>" + getBrandNameOfProduct(giftHistory) + "</font>", "small", "top", "left"),
                 ButtonsForText.of(6, 4, "none", "발신자명,메시지",
                         "<font color=#323232>From. " + getSenderName(giftHistory) + "</font><br>"
                                 + "<font color=#323232>Message : " + getMessage(giftHistory) + "</font><br><br>"
                                 + "<font color=#323232><b>Code : " + getGiftCode(giftHistory) + "</b></font><br><br>"
                                 + "<font color=#323232><b>Expire Date : " + getExpirationDate(giftHistory) + "</b></font>", "small", "middle", "left"),
-                ButtonsForText.of(6, 3, "none", "수신자명,성공", "<font color=#323232><b>" + giftHistory.getReceiverName() + "님의 이메일로 선물을 전달했습니다.</b></font>", "medium", "middle", "left"),
-                ButtonsForText.of(6, 2, "none", "포인트내역", "<font color=#FF0115>사용 포인트 : " + giftHistory.getPrice() + "p </font><br><font color=#323232>남은 포인트 : " + giftHistory.getSender().getPoint() + "p </font>", "medium", "middle", "left"),
-                ButtonsForButton.of(6, 1, "open-url", giftHistory.getProduct().getDiscountShop(), "#2db9b9", "<font color=#ffffff>see participating stores</font>", "small", "middle", "middle"),
-                ButtonsForButton.of(6, 1, "open-url", "https://www.sharetreats.ph/welcome", "#2db9b9", "<font color=#ffffff>terms of use</font>", "small", "middle", "middle"));
+                ButtonsForText.of(6, 3, "none", "수신자명,성공", "<font color=#323232><b>Your gift has been delivered to " + giftHistory.getReceiverName() + "'s email</b></font>", "medium", "middle", "left"),
+                ButtonsForText.of(6, 2, "none", "포인트내역", "<font color=#FF0115>Used points : " + giftHistory.getPrice() + "p </font><br><font color=#323232>Remaining points : " + giftHistory.getSender().getPoint() + "p </font>", "medium", "middle", "left"),
+                ButtonsForButton.of(6, 1, "open-url", giftHistory.getProduct().getDiscountShop(), "#29A7D9", "<font color=#ffffff>see participating stores</font>", "small", "middle", "middle"),
+                ButtonsForButton.of(6, 1, "open-url", "https://www.sharetreats.ph/welcome", "#29A7D9", "<font color=#ffffff>terms of use</font>", "small", "middle", "middle"));
     }
 
     private static String getExpirationDate(GiftHistory giftHistory) {
