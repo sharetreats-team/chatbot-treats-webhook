@@ -65,7 +65,7 @@ public class TextService {
                     .minApiVersion(1)
                     .trackingData("email")
                     .type("text")
-                    .text("이메일을 입력해주세요")
+                    .text("Please enter the recipient's email")
                     .build();
         } else if (trackingData.equals("email")) {
             String gifteeEmail = messageText;
@@ -80,7 +80,7 @@ public class TextService {
                     .minApiVersion(1)
                     .trackingData("message")
                     .type("text")
-                    .text("메시지를 입력해주세요")
+                    .text("Please enter your message")
                     .build();
         } else if (trackingData.equals("message")) {
             String gifteeMessage = messageText;
@@ -96,7 +96,7 @@ public class TextService {
                     .minApiVersion(1)
                     .trackingData("discount_code")
                     .type("text")
-                    .text("할인 코드를 입력해 주세요!")
+                    .text("Please enter your discount code!")
                     .keyboard(createNoDiscountKeyboard())
                     .build();
             return sendTextWithKeyboardMessage(authToken, viberMessage);
@@ -129,7 +129,7 @@ public class TextService {
                     .minApiVersion(1)
                     .trackingData("discount_code")
                     .type("text")
-                    .text("유효하지 않은 할인 코드입니다. 다시 입력해주세요.")
+                    .text("Invalid discount code.\n Please enter it again.")
                     .build();
 
         } else if (trackingData.equals("")) {
@@ -149,7 +149,7 @@ public class TextService {
                         .minApiVersion(1)
                         .trackingData("name")
                         .type("text")
-                        .text("이름을 입력해주세요")
+                        .text("Please enter the recipient's name")
                         .build();
             }
         }
@@ -167,13 +167,12 @@ public class TextService {
                 .minApiVersion(1)
                 .trackingData("")
                 .type("text")
-                .text("선물 내용 확인\n" +
-                        "구입하시는 상품:\n" + giftHistoryRedisHash.getProductName() + "\n" +
-                        "결제 금액:\n" + giftHistoryRedisHash.getPrice() + " point\n" +
-                        "선물받는 사람:\n" + giftHistoryRedisHash.getReceiverName() + "\n" +
-                        "받는 사람 이메일:\n" + giftHistoryRedisHash.getReceiverEmail() + "\n" +
-                        "보낼 메시지:\n" + giftHistoryRedisHash.getMessage() + "\n\n" +
-                        "위 내용이 맞다면 Point Payment, 다시 입력하시려면 Wrong Information 버튼을 클릭해주세요")
+                .text("Check your purchase\n" +
+                        "Product:\n" + giftHistoryRedisHash.getProductName() + "\n" +
+                        "Payment amount:\n" + giftHistoryRedisHash.getPrice() + " point\n" +
+                        "Recipient:\n" + giftHistoryRedisHash.getReceiverName() + "\n" +
+                        "Recipient email:\n" + giftHistoryRedisHash.getReceiverEmail() + "\n" +
+                        "Message:\n" + giftHistoryRedisHash.getMessage())
                 .keyboard(createPurchaseKeyboard(receiverId, giftHistoryRedisHash.getProductId()))
                 .build();
         return viberMessage;
@@ -278,23 +277,29 @@ public class TextService {
     }
     private ViberSimpleKeyboard createPurchaseKeyboard(String receiverId, Long productId) {
         ViberSimpleButton nextButton = ViberSimpleButton.builder()
+                .columns(6)
+                .rows(1)
+                .bgColor("#29A7D9")
                 .actionType("reply")
                 .actionBody("use point")
-                .text("Point Payment")
+                .text("Confirm")
                 .textSize("regular")
                 .build();
 
         ViberSimpleButton wrongInfoButton = ViberSimpleButton.builder()
+                .columns(6)
+                .rows(1)
+                .bgColor("#29A7D9")
                 .actionType("reply")
                 .actionBody("send treats " + productId)
-                .text("Wrong Information")
+                .text("Type it again")
                 .textSize("regular")
                 .build();
 
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
-                .bgColor("#2DB9B9")
+                .bgColor("#FFFFFF")
                 .buttons(Arrays.asList(nextButton, wrongInfoButton))
                 .build();
 
@@ -302,6 +307,9 @@ public class TextService {
     }
     private ViberSimpleKeyboard createNoDiscountKeyboard() {
         ViberSimpleButton nextButton = ViberSimpleButton.builder()
+                .columns(6)
+                .rows(1)
+                .bgColor("#29A7D9")
                 .actionType("reply")
                 .actionBody("no discount")
                 .text("No Code")
@@ -311,7 +319,7 @@ public class TextService {
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
-                .bgColor("#2DB9B9")
+                .bgColor("#FFFFFF")
                 .buttons(singletonList(nextButton))
                 .build();
 
@@ -320,6 +328,9 @@ public class TextService {
 
     private ViberSimpleKeyboard createProductDetailKeyboard(Product product) {
         ViberSimpleButton sendTreatsButton = ViberSimpleButton.builder()
+                .columns(6)
+                .rows(1)
+                .bgColor("#29A7D9")
                 .actionType("reply")
                 .actionBody("send treats " + product.getId())
                 .text("BUY")
@@ -327,6 +338,9 @@ public class TextService {
                 .build();
 
         ViberSimpleButton discountPlaceButton = ViberSimpleButton.builder()
+                .columns(6)
+                .rows(1)
+                .bgColor("#29A7D9")
                 .actionType("open-url")
                 .actionBody(product.getDiscountShop())
                 .text("GO DISCOUNT PLACE")
@@ -336,7 +350,7 @@ public class TextService {
         ViberSimpleKeyboard keyboard = ViberSimpleKeyboard.builder()
                 .type("keyboard")
                 .defaultHeight(false)
-                .bgColor("#2DB9B9")
+                .bgColor("#FFFFFF")
                 .buttons(Arrays.asList(sendTreatsButton, discountPlaceButton))
                 .build();
 
