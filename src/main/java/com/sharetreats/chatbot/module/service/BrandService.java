@@ -5,6 +5,7 @@ import com.sharetreats.chatbot.module.controller.dto.brandDtos.BrandRequest;
 import com.sharetreats.chatbot.module.entity.Brand;
 import com.sharetreats.chatbot.module.option.Status;
 import com.sharetreats.chatbot.module.repository.BrandRepository;
+import com.sharetreats.chatbot.module.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +17,28 @@ import java.util.stream.Collectors;
 public class BrandService {
 
     private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
 
     public String registerBrand(BrandRequest request) {
         Brand newBrand = Brand.builder()
                 .name(request.getName())
                 .status(Status.ACTIVE)
                 .image(request.getImage().toString())
+                .category(categoryRepository.findById(request.getCategoryId())
+                        .orElseThrow(() ->new IllegalArgumentException()))
                 .build();
         brandRepository.save(newBrand);
         return "브랜드 등록이 완료되었습니다.";
     }
 
-    public List<BrandButtons> createBrandButtons() {
-        return brandRepository.findAll()
-                .stream()
-//                .filter(brand -> brand.getStatus().getKey().equals(Status.ACTIVE))
+    public List<BrandButtons> createBrandButtons(Long categoryId) {
+        List<Brand> brandList;
+        if (categoryId == 1) {
+            brandList = brandRepository.findAll();
+        } else {
+            brandList = brandRepository.findBrandsByCategory(categoryId);
+        }
+        return brandList.stream()
                 .map(b -> new BrandButtons(2,2,
                         "<br><font color=\\\"#494E67\\\"><b>" + b.getName() + "</b></font>",
                         "small", "center", "bottom", "reply",

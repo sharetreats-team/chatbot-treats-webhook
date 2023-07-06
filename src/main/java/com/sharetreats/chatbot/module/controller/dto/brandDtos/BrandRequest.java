@@ -11,4 +11,5 @@ public class BrandRequest {
 
     private String name;
     private String image;
+    private Long categoryId;
 }
