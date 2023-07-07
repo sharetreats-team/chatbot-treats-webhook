@@ -52,8 +52,11 @@ public class WebhookController {
         if (event.equals(MESSAGE)) {
             String accountId = getSenderId(callback);
             boolean isValidToken = tokenConfig.validateToken(accountId);
-            if (isValidToken)
-            return sendResponseByTextInMessage(callback);
+            boolean isRetry = validateRetry(callback);
+            if (isValidToken || isRetry) {
+                if (!isValidToken) tokenConfig.generateToken(accountId);
+                return sendResponseByTextInMessage(callback);
+            }
             else return sendInvalidTokenMessage.execute(accountId);
         }
         if (event.equals(UNSUBSCRIBED))
@@ -79,7 +82,7 @@ public class WebhookController {
             return sendProductsOfBrand.execute(callback);
         if (isContains(text, SEND_TREATS) || isContains(text, NO_DISCOUNT) || isTrackingDataValid(trackingData))
           return sendPurchaseInfo.execute(callback);
-        if (isContains(text, VIEW_BRANDS)) {
+        if (isContains(text, VIEW_BRANDS) || isContains(text, RETRY)) {
             manageSubscription.validateAccount(callback);
             return sendCategoryKeyboard.execute(callback);
         }
@@ -128,6 +131,14 @@ public class WebhookController {
         return trackingData.equals("name") || trackingData.equals("email") || trackingData.equals("message") || trackingData.equals("discount_code");
     }
 
+    public boolean validateRetry(String callback) {
+        String string = new JSONObject(callback).getJSONObject("message").getString("text");
+        if (string.equals("retry")) {
+            return true;
+        }
+        return false;
+    }
+
     static class EventType {
         public static final String CONVERSATION_STARTED = "conversation_started";
         public static final String MESSAGE = "message";
@@ -143,6 +154,7 @@ public class WebhookController {
         public static final String VIEW_MORE = "view more";
         public static final String NO_DISCOUNT = "no discount";
         public static final String VIEW_BRANDS_CATEGORY = "categoryId";
+        public static final String RETRY = "retry";
     }
 }
 
