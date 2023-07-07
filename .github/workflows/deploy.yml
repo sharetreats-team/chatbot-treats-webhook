@@ -33,8 +33,6 @@ jobs:
           spring.datasource.url: ${{ secrets.RDS_URL }}
           spring.datasource.username: ${{ secrets.RDS_USERNAME }}
           spring.datasource.password: ${{ secrets.RDS_PASSWORD }}
-          spring.redis.gift-history.host: ${{ secrets.ELASTICACHE_ENDPOINT }}
-          spring.redis.token.host: ${{ secrets.ELASTICACHE_TOKEN_ENDPOINT }}
           cloud.aws.s3.credentials.accesskey: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
           cloud.aws.s3.credentials.secretkey: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           viber.auth.token: ${{ secrets.VIBER_AUTH_TOKEN }}
