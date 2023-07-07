@@ -19,6 +19,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      data-locations:
+        - classpath*:db/category-data.sql
+        - classpath*:db/brand-data.sql
+        - classpath*:db/product-data.sql
+        - classpath*:db/discount-code-data.sql
+      encoding: UTF-8
+      mode: always
+
   redis:
     gift-history:
       host: ${ELASTICACHE_ENDPOINT}
