@@ -1,4 +1,4 @@
-INSERT INTO brand (name, image, status, category)
+INSERT INTO brand (name, image, status, category_id)
 VALUES ('McDonald''s', 'https://stchatbotimagebucket.s3.ap-northeast-2.amazonaws.com/brand/945c1b6e-6319-45c5-96e5-3733455768f2.jpg', 'ACTIVE', 3),
        ('Chowking', 'https://stchatbotimagebucket.s3.ap-northeast-2.amazonaws.com/brand/dc880a2e-3061-4cb0-9e1b-767637ee94b0.jpeg', 'ACTIVE', 3),
        ('FoodPanda', 'https://stchatbotimagebucket.s3.ap-northeast-2.amazonaws.com/brand/b549fbf2-649c-49ab-b835-9568cbb660e5.jpeg', 'ACTIVE', 3),
