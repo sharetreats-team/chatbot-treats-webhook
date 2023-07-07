@@ -6,7 +6,6 @@ import com.sharetreats.chatbot.module.entity.Product;
 import com.sharetreats.chatbot.module.repository.BrandRepository;
 import com.sharetreats.chatbot.module.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,49 +15,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.sharetreats.chatbot.module.dto.ViberRichMediaMessage.RichMedia;
-
-
-@Service
 @RequiredArgsConstructor
-public class RichMediaService {
-    private final ProductRepository productRepository;
+@Service
+public class ProductListServiceImpl implements ProductListService {
     private final BrandRepository brandRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
-    public ResponseEntity<ViberRichMediaMessage> sendProductsByBrand(String receiverId, Long brandId, String auth_token) {
-        Brand brand = brandRepository.findById(brandId).orElse(null);
-        if (brand == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        String brandName = brand.getName();
-        List<Product> products = productRepository.findByBrandName(brandName);
-
-        String sendUrl = "https://chatapi.viber.com/pa/send_message";
-
-        ViberRichMediaMessage richMediaMessage = convertToRichMediaMessages(products);
-        return sendRichMediaMessage(receiverId, auth_token, sendUrl, richMediaMessage);
-
-    }
-
-    private ResponseEntity<ViberRichMediaMessage> sendRichMediaMessage(String receiverId, String authToken, String sendUrl, ViberRichMediaMessage richMediaMessage) {
-        richMediaMessage.setReceiver(receiverId);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Viber-Auth-Token", authToken);
-
-        HttpEntity<ViberRichMediaMessage> httpEntity = new HttpEntity<>(richMediaMessage, headers);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(sendUrl, httpEntity, String.class);
-
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok(richMediaMessage);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    public ViberRichMediaMessage convertToRichMediaMessages(List<Product> products) {
+    private final ProductRepository productRepository;
+    @Override
+    public ViberRichMediaMessage makeMessage(List<Product> products) {
         List<Map<String ,Object>> buttons = new ArrayList<>();
         for (Product product : products) {
             Map<String, Object> image = new LinkedHashMap<>();
@@ -74,7 +37,7 @@ public class RichMediaService {
             makeDetailButton(buttons, product, detailButton);
         }
 
-        RichMedia richMedia = RichMedia.builder()
+        ViberRichMediaMessage.RichMedia richMedia = ViberRichMediaMessage.RichMedia.builder()
                 .type("rich_media")
                 .buttonsGroupColumns(6)
                 .buttonsGroupRows(7)
@@ -87,6 +50,42 @@ public class RichMediaService {
                 .type("rich_media")
                 .richMedia(richMedia)
                 .build();
+    }
+
+    @Override
+    public ResponseEntity<?> sendMessage(String receiverId, Long brandId, String auth_token) {
+        Brand brand = brandRepository.findById(brandId).orElse(null);
+        if (brand == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        String brandName = brand.getName();
+        List<Product> products = productRepository.findByBrandName(brandName);
+
+
+
+        ViberRichMediaMessage richMediaMessage = makeMessage(products);
+        return getRichMediaResponse(receiverId, auth_token, richMediaMessage);
+    }
+
+    @Override
+    public ResponseEntity<?> getRichMediaResponse(String receiverId, String authToken, ViberRichMediaMessage richMediaMessage) {
+        richMediaMessage.setReceiver(receiverId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Viber-Auth-Token", authToken);
+
+        String sendUrl = "https://chatapi.viber.com/pa/send_message";
+
+        HttpEntity<ViberRichMediaMessage> httpEntity = new HttpEntity<>(richMediaMessage, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(sendUrl, httpEntity, String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            return ResponseEntity.ok(richMediaMessage);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     private void makeProductImage(List<Map<String, Object>> buttons, Product product, Map<String, Object> image) {
@@ -139,5 +138,4 @@ public class RichMediaService {
 
         buttons.add(detailButton);
     }
-
 }

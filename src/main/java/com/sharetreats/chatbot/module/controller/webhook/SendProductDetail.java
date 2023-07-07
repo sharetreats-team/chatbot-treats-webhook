@@ -1,6 +1,6 @@
 package com.sharetreats.chatbot.module.controller.webhook;
 
-import com.sharetreats.chatbot.module.service.TextService;
+import com.sharetreats.chatbot.module.service.ProductDetailService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 @Component
 public class SendProductDetail extends ResponseEvent {
-    private final TextService textService;
+    private final ProductDetailService productDetailService;
     @Value("${viber.auth.token}")
     private String viberAuthToken;
     @Override
@@ -20,7 +20,7 @@ public class SendProductDetail extends ResponseEvent {
         JSONObject callbackData = new JSONObject(callback);
         String senderId = callbackData.getJSONObject("sender").getString("id");
         Long productId = findProductId(callback);
-        return textService.sendProductDetailMessage(senderId, productId, viberAuthToken);
+        return productDetailService.sendMessage(senderId, productId, viberAuthToken);
     }
 
     private Long findProductId(String messageText) {

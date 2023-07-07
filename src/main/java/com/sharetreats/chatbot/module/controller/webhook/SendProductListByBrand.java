@@ -1,6 +1,6 @@
 package com.sharetreats.chatbot.module.controller.webhook;
 
-import com.sharetreats.chatbot.module.service.RichMediaService;
+import com.sharetreats.chatbot.module.service.ProductListService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Component
-public class SendProductsOfBrand extends ResponseEvent{
-    private final RichMediaService richMediaService;
+public class SendProductListByBrand extends ResponseEvent{
+    private final ProductListService productListService;
     @Value("${viber.auth.token}")
     private String viberAuthToken;
 
@@ -24,7 +24,7 @@ public class SendProductsOfBrand extends ResponseEvent{
         String messageText = callbackData.getJSONObject("message").getString("text");
         Long brandId = findBrandId(messageText);
 
-        return richMediaService.sendProductsByBrand(senderId, brandId, viberAuthToken);
+        return productListService.sendMessage(senderId, brandId, viberAuthToken);
     }
 
     private Long findBrandId(String messageText) {
