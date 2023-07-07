@@ -25,7 +25,7 @@ public class WebhookController {
 
     private final SendWelcomeMessage sendWelcomeMessage;
     private final SendPaymentResultMessage sendPaymentResultMessage;
-    private final SendProductsOfBrand sendProductsOfBrand;
+    private final SendProductListByBrand sendProductListByBrand;
     private final SendBrandKeyboardMessage sendBrandKeyboardMessage;
     private final SendPurchaseInfo sendPurchaseInfo;
     private final SendProductDetail sendproductDetail;
@@ -66,7 +66,7 @@ public class WebhookController {
         if (isContains(text, BUY_USE_POINT))
             return sendPaymentResultMessage.execute(callback);
         if (isContains(text, VIEW_PRODUCTS_OF_BRAND))
-            return sendProductsOfBrand.execute(callback);
+            return sendProductListByBrand.execute(callback);
         if (isContains(text, SEND_TREATS) || isContains(text, NO_DISCOUNT) || isTrackingDataValid(trackingData))
           return sendPurchaseInfo.execute(callback);
         if (isContains(text, VIEW_BRANDS)) {
