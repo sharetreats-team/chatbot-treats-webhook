@@ -17,7 +17,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Override
     public ViberTextWithKeyboardMessage makeMessage(String receiverId, Product product) {
         String text = String.format(
-                "*BRAND*\n %s\n*PRODUCT*: %s\n*PRICE*\n: %d\n*DISCOUNT PRICE*: %d\n\n*DESCRIPTION*\n%s",
+                "*BRAND*\n %s\n*PRODUCT\n* %s\n*PRICE*\n %d point\n*DISCOUNT PRICE\n* %d point\n\n*DESCRIPTION*\n%s",
                 product.getBrandName(),
                 product.getName(),
                 product.getPrice(),
