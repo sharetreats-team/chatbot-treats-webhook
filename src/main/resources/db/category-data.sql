@@ -1,4 +1,4 @@
-INSERT INTO brand_category (categoryName, color)
+INSERT INTO brand_category (category_name, color)
 VALUES ('ALL', '#79A4D2'),
        ('Groceries & Shop', '#90ACDA'),
        ('Food & Delivery', '#A3CBE0'),
