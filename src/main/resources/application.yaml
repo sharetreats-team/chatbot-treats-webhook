@@ -18,7 +18,8 @@ spring:
     password: ${RDS_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+    defer-datasource-initialization: true
 
   mail:
     host: smtp.gmail.com
