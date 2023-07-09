@@ -47,7 +47,7 @@ public class PayResultButtons {
     }
 
     private static String getBrandNameOfProduct(GiftHistory giftHistory) {
-        return giftHistory.getProduct().getBrandName();
+        return giftHistory.getProduct().getBrand().getName();
     }
 
     private static String getProductName(GiftHistory giftHistory) {

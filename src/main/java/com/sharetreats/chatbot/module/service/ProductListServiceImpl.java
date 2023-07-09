@@ -101,7 +101,7 @@ public class ProductListServiceImpl implements ProductListService {
     private void makeProductText(List<Map<String, Object>> buttons, Product product, Map<String, Object> productText) {
         productText.put("Columns", 6);
         productText.put("Rows", 2);
-        productText.put("Text", "<font color=#323232><b>" + product.getBrandName() + "</b></font><font color=#777777><br>" + product.getName() + " </font><font color=#6fc133><br>" + product.getDiscountPrice() + "</font>");
+        productText.put("Text", "<font color=#323232><b>" + product.getBrand().getName() + "</b></font><font color=#777777><br>" + product.getName() + " </font><font color=#6fc133><br>" + product.getDiscountPrice() + "</font>");
         productText.put("ActionType", "open-url");
         productText.put("ActionBody", "https://www.google.com");
         productText.put("TextSize", "medium");
