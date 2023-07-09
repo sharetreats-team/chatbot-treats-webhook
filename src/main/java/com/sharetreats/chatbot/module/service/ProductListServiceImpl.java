@@ -58,10 +58,7 @@ public class ProductListServiceImpl implements ProductListService {
         if (brand == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        String brandName = brand.getName();
-        List<Product> products = productRepository.findByBrandName(brandName);
-
-
+        List<Product> products = productRepository.findByBrand(brand);
 
         ViberRichMediaMessage richMediaMessage = makeMessage(products);
         return getRichMediaResponse(receiverId, auth_token, richMediaMessage);
