@@ -3,7 +3,6 @@ package com.sharetreats.chatbot.module.event;
 import com.sharetreats.chatbot.infra.mail.EmailMessage;
 import com.sharetreats.chatbot.infra.mail.EmailService;
 import com.sharetreats.chatbot.module.entity.GiftHistory;
-import com.sharetreats.chatbot.module.repository.GiftHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -56,7 +55,7 @@ public class GiftHistoryEmailListener {
         context.setVariable("senderName", giftHistory.getSender().getName());
         context.setVariable("giftCode", giftHistory.getGiftCode());
         context.setVariable("expirationDate", giftHistory.getExpirationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        context.setVariable("brandName", giftHistory.getProduct().getBrandName());
+        context.setVariable("brandName", giftHistory.getProduct().getBrand().getName());
         context.setVariable("productName", giftHistory.getProduct().getName());
         context.setVariable("productImage", giftHistory.getProduct().getImage());
         context.setVariable("message", giftHistory.getMessage());
