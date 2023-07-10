@@ -13,7 +13,7 @@ public class AccountService {
 
     public Account createAccount(AccountRequest request) {
 
-        Account newAccount = Account.of(request.getId(), request.getName(), request.getAvatar(), 100);
+        Account newAccount = Account.of(request.getId(), request.getName(), request.getAvatar(), 30000);
         accountRepository.save(newAccount);
 
         return newAccount;
