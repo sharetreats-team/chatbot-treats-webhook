@@ -29,7 +29,18 @@ public class Product {
     private Integer discountPrice;
     @Column(name = "discount_shop", nullable = false)
     private String discountShop;
-    @Column(name = "brand_name", nullable = false)
-    private String brandName;
+    @ManyToOne
+    @JoinColumn(name = "brand_id", nullable = false)
+    private Brand brand;
 
+    public Product(String name, String image, String status, String description, Integer price, Integer discountPrice, String discountShop, Brand brand) {
+        this.name = name;
+        this.image = image;
+        this.status = status;
+        this.description = description;
+        this.price = price;
+        this.discountPrice = discountPrice;
+        this.discountShop = discountShop;
+        this.brand = brand;
+    }
 }
