@@ -55,7 +55,7 @@ public class WebhookController {
             boolean isRetry = validateRetry(callback);
             if (isValidToken || isRetry) {
                 if (!isValidToken) tokenConfig.generateToken(accountId);
-                return sendResponseByTextInMessage(callback);
+                return sendWelcomeMessage.execute();
             }
             else return sendInvalidTokenMessage.execute(accountId);
         }
@@ -82,7 +82,7 @@ public class WebhookController {
             return sendProductListByBrand.execute(callback);
         if (isContains(text, SEND_TREATS) || isContains(text, NO_DISCOUNT) || isTrackingDataValid(trackingData))
           return sendPurchaseInfo.execute(callback);
-        if (isContains(text, VIEW_BRANDS) || isContains(text, RETRY)) {
+        if (isContains(text, VIEW_BRANDS)) {
             manageSubscription.validateAccount(callback);
             return sendCategoryKeyboard.execute(callback);
         }
@@ -154,7 +154,6 @@ public class WebhookController {
         public static final String VIEW_MORE = "view more";
         public static final String NO_DISCOUNT = "no discount";
         public static final String VIEW_BRANDS_CATEGORY = "categoryId";
-        public static final String RETRY = "retry";
     }
 }
 
