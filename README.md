@@ -2,42 +2,59 @@
 
 ` 🎁 Viber 메신저 플랫폼의 '대화형 봇' 을 통한 모바일 선물하기 서비스 🎁 `
 
+* **Version : 1.0.0**
 * **프로젝트 명 : Viber 챗봇 기반 선물하기 서비스 구현**
-* **프로젝트 기간 : 2023.06.08 ~ 2023.07.07**
-* **Viber챗봇 링크**
+* **프로젝트 기간 : 2023.06.08 ~ 2023.07.10**
+* **프로젝트 소개** : 
+   * Viber 앱(메신저 플랫폼)의 챗봇과 통신할 수 있는 webhook 서버 구축
+   *  해당 챗봇을 통한 선물하기 서비스 개발
 
-> *설계 및 명세에 대한 내용은  `Wiki`를 참고해주세요.*
+<br>
+
+> *설계 및 명세, 문제 해결에 대한 내용은  `Wiki`를 참고해주세요.*
 > *[Wiki 바로가기](https://github.com/sharetreats-team/chatbot-treats-webhook/wiki)*
 
 <br>
 
 ## ✨  개발환경
 
-### 1) 주요 환경
+### 1) 핵심 외부 API
+
+> 첨부된 링크를 통해 Viber API 문서를 확인할 수 있습니다.
+
+- [Viber(Messenger APP) API](https://developers.viber.com/docs/api/rest-bot-api/)
+
+### 2) 주요 환경
 
 - IntelliJ IDEA (Ultimate)
 - Java 11
-- Gradle 8.0
+- Gradle 7.6.1
 - Spring Boot 2.7.12
 
-### 2) 세부 기술 스택
+### 3) 활용 기술
 
 - (ORM) JPA
-- Query DSL
-- Spring Mail
-- Viber bot
+- Spring Mail (Gmail SMTP)
+- JsonObject
+- SpringAsync
+- RestTemplate
 
-### 3) 데이터베이스
+### 4) 데이터베이스
 
 - (RDB) MySQL
 - (In-memory) Redis
 
-### 4) 인프라
+### 5) 인프라
 
-- AWS EC2 (HTTPS 네트워크 구축)
+- AWS EC2 
+- Certificate Manager, ALB (HTTPS 네트워크 구축)
 - AWS RDS (MySQL)
+- ElastiCache Redis
+- S3 Image Bucket
+- Github Action
+- Code Deploy
 
-### 5) VCS(Version Controller System) & etc
+### 6) VCS(Version Controller System) & etc
 
 - Git
 - Notion, Slack
@@ -46,14 +63,8 @@
 
 ##  🅰 프로젝트 아키텍처
 
-### 1) 시스템 아키텍처
+![image](https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/0f01a1bc-f8f2-4393-a348-4228ccc55e55)
 
-![image (1)](https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/b48ed74c-c008-445d-9b62-f2a51c74c789)
-
-
-### 2) CI/CD
-
-<img alt="스크린샷 2023-06-19 오전 9 57 59" src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/fda52d09-ddb8-4007-9ce7-c211276528ae">
 
 <br>
 
@@ -63,7 +74,7 @@
 3️⃣ 'In Progress'로 옮긴 업무를 `Convert to issue`로 변경하고, 작업의 내용을 자세하게 작성합니다. <br>
 4️⃣ 코드를 `fork`하고 `개인 repository` 에서 작업합니다. <br>
 5️⃣ 작업을 완료하면 `original repository`의 `test` 브랜치로 PR을 보냅니다. <br>
-6️⃣ 코드리뷰를 진행하고, 모든 승인을 받으면 `Merge` 합니다.
+6️⃣ 코드리뷰를 진행하고, 모든 승인을 받으면 `Merge` 합니다. <br>
 7️⃣ Merge가 성공하면, Issue는 자동으로 종료합니다. 또한 `In Progress`에 있던 작업 티켓도 `Done`으로 자동으로 이동합니다.
 
 
@@ -124,9 +135,14 @@
 
 <br>
 
-## ⏯ Get started
+## ⏯ 구현 결과
 
-> 아래 방법을 통해 `챗봇 선물하기 서비스`를 경험할 수 있습니다.
+> (좌) 시연 영상, (우) 수신자 이메일로 전달되는 선물
+
+<p align="center">
+ <img src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/f05985dc-f5b6-4dfb-bea9-4deccad039f4" width="290" alt="image">
+ <img width="380" alt="image" src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/da727bc9-98c4-4843-b0c7-d3c6c9b94a19">
+</p>
 
 <br>
 

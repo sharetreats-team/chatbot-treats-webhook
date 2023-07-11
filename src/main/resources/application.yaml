@@ -1,0 +1,79 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        same-site: None
+        secure: true
+      context-path: /
+      encoding:
+        charset: UTF-8
+        force-response: true
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${RDS_URL}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      data-locations:
+        - classpath*:db/category-data.sql
+        - classpath*:db/brand-data.sql
+        - classpath*:db/product-data.sql
+        - classpath*:db/discount-code-data.sql
+      encoding: UTF-8
+      mode: always
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
+cloud:
+  aws:
+    s3:
+      bucket: stchatbotimagebucket
+      credentials:
+        accesskey: ${AWS_S3_ACCESS_KEY_ID}
+        secretkey: ${AWS_S3_SECRET_ACCESS_KEY}
+      region:
+        static: ap-northeast-2
+    stack:
+      auto: false
+      
+brand-path: "brand"
+product-path: "product" 
+      
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        orm:
+          jpa: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+
+viber:
+  auth:
+    token: ${VIBER_AUTH_TOKEN}
+  avatar: ${VIBER_AVATAR}
+  welcome-media: ${VIBER_WELCOME_MEDIA}
+
+
