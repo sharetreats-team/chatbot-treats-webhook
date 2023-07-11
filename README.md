@@ -2,25 +2,36 @@
 
 ` 🎁 Viber 메신저 플랫폼의 '대화형 봇' 을 통한 모바일 선물하기 서비스 🎁 `
 
+* **Version : 1.0.0**
 * **프로젝트 명 : Viber 챗봇 기반 선물하기 서비스 구현**
 * **프로젝트 기간 : 2023.06.08 ~ 2023.07.10**
-* **Version : 1.0.0 - 진행중**
+* **프로젝트 소개** : 
+   * Viber 앱(메신저 플랫폼)의 챗봇과 통신할 수 있는 webhook 서버 구축
+   *  해당 챗봇을 통한 선물하기 서비스 개발
 
-> *설계 및 명세에 대한 내용은  `Wiki`를 참고해주세요.*
+<br>
+
+> *설계 및 명세, 문제 해결에 대한 내용은  `Wiki`를 참고해주세요.*
 > *[Wiki 바로가기](https://github.com/sharetreats-team/chatbot-treats-webhook/wiki)*
 
 <br>
 
 ## ✨  개발환경
 
-### 1) 주요 환경
+### 1) 핵심 외부 API
+
+> 첨부된 링크를 통해 Viber API 문서를 확인할 수 있습니다.
+
+- [Viber(Messenger APP) API](https://developers.viber.com/docs/api/rest-bot-api/)
+
+### 2) 주요 환경
 
 - IntelliJ IDEA (Ultimate)
 - Java 11
-- Gradle 8.0
+- Gradle 7.6.1
 - Spring Boot 2.7.12
 
-### 2) 세부 기술 스택
+### 3) 활용 기술
 
 - (ORM) JPA
 - Spring Mail (Gmail SMTP)
@@ -28,12 +39,12 @@
 - SpringAsync
 - RestTemplate
 
-### 3) 데이터베이스
+### 4) 데이터베이스
 
 - (RDB) MySQL
 - (In-memory) Redis
 
-### 4) 인프라
+### 5) 인프라
 
 - AWS EC2 
 - Certificate Manager, ALB (HTTPS 네트워크 구축)
@@ -43,7 +54,7 @@
 - Github Action
 - Code Deploy
 
-### 5) VCS(Version Controller System) & etc
+### 6) VCS(Version Controller System) & etc
 
 - Git
 - Notion, Slack
@@ -129,7 +140,7 @@
 > (좌) 시연 영상, (우) 수신자 이메일로 전달되는 선물
 
 <p align="center">
- <img src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/aebc7824-05a9-4f26-a93c-d2d1cadc51a0" width="290" alt="image">
+ <img src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/f05985dc-f5b6-4dfb-bea9-4deccad039f4" width="290" alt="image">
  <img width="380" alt="image" src="https://github.com/sharetreats-team/chatbot-treats-webhook/assets/79829085/da727bc9-98c4-4843-b0c7-d3c6c9b94a19">
 </p>
 
