@@ -35,12 +35,12 @@ public class PurchaseInfoServiceImpl implements PurchaseInfoService {
                 .minApiVersion(1)
                 .trackingData("")
                 .type("text")
-                .text("Check your purchase\n" +
-                        "Product:\n" + giftHistoryRedisHash.getProductName() + "\n" +
-                        "Payment amount:\n" + giftHistoryRedisHash.getPrice() + " point\n" +
-                        "Recipient:\n" + giftHistoryRedisHash.getReceiverName() + "\n" +
-                        "Recipient email:\n" + giftHistoryRedisHash.getReceiverEmail() + "\n" +
-                        "Message:\n" + giftHistoryRedisHash.getMessage())
+                .text("*Check your purchase*\n\n" +
+                        "*Product:*\n" + giftHistoryRedisHash.getProductName() + "\n\n" +
+                        "*Payment amount:*\n" + giftHistoryRedisHash.getPrice() + " *point*\n\n" +
+                        "*Recipient:*\n" + giftHistoryRedisHash.getReceiverName() + "\n\n" +
+                        "*Recipient email:*\n" + giftHistoryRedisHash.getReceiverEmail() + "\n\n" +
+                        "*Message:*\n" + giftHistoryRedisHash.getMessage())
                 .keyboard(keyboardService.createPurchaseKeyboard(receiverId, giftHistoryRedisHash.getProductId()))
                 .build();
     }
