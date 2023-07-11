@@ -43,19 +43,17 @@ public class WebhookController {
     @PostMapping("/viber/bot/webhook")
     public ResponseEntity<?> webhook(@RequestBody String callback) {
         String event = getEventValueToCallback(callback);
-
+        if (getTextToMessage(callback).equals("retry"))
+            event = CONVERSATION_STARTED;
         if (event.equals(CONVERSATION_STARTED)) {
-            String accountId = getUserId(callback);
-            tokenConfig.generateToken(accountId);
+            generateToken(callback);
             return sendWelcomeMessage.execute();
         }
         if (event.equals(MESSAGE)) {
             String accountId = getSenderId(callback);
             boolean isValidToken = tokenConfig.validateToken(accountId);
-            boolean isRetry = validateRetry(callback);
-            if (isValidToken || isRetry) {
-                if (!isValidToken) tokenConfig.generateToken(accountId);
-                return sendWelcomeMessage.execute();
+            if (isValidToken) {
+                return sendResponseByTextInMessage(callback);
             }
             else return sendInvalidTokenMessage.execute(accountId);
         }
@@ -130,13 +128,9 @@ public class WebhookController {
     private static boolean isTrackingDataValid (String trackingData){
         return trackingData.equals("name") || trackingData.equals("email") || trackingData.equals("message") || trackingData.equals("discount_code");
     }
-
-    public boolean validateRetry(String callback) {
-        String string = new JSONObject(callback).getJSONObject("message").getString("text");
-        if (string.equals("retry")) {
-            return true;
-        }
-        return false;
+    private void generateToken(String callback) {
+        String accountId = getUserId(callback);
+        tokenConfig.generateToken(accountId);
     }
 
     static class EventType {
