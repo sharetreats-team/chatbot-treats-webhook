@@ -25,13 +25,10 @@ public class sendCategoryKeyboard {
     public ResponseEntity<?> execute(String callback) {
         CategoryResponse response = findCategories(getIdFromSender(callback));
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Viber-Auth-Token", token);
-
+        HttpHeaders headers = setHttpHeaders();
         HttpEntity<CategoryResponse> httpEntity = new HttpEntity<>(response, headers);
-        ResponseEntity<String> restResponse = restTemplateConfig.restTemplate().postForEntity(VIBER_SEND_MESSAGE_URL, httpEntity, String.class);
-        return restResponse;
+
+        return restTemplateConfig.restTemplate().postForEntity(VIBER_SEND_MESSAGE_URL, httpEntity, String.class);
     }
 
     private CategoryResponse findCategories(String id) {
@@ -41,5 +38,12 @@ public class sendCategoryKeyboard {
 
     private static String getIdFromSender(String callback) {
         return new JSONObject(callback).getJSONObject("sender").getString("id");
+    }
+
+    private HttpHeaders setHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Viber-Auth-Token", token);
+        return headers;
     }
 }
