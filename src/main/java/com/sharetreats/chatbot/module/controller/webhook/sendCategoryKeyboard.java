@@ -34,7 +34,7 @@ public class sendCategoryKeyboard {
         return restResponse;
     }
 
-    public CategoryResponse findCategories(String id) {
+    private CategoryResponse findCategories(String id) {
         CategoryKeyboard keyboard = CategoryKeyboard.of(categoryService.createCategoryButtons());
         return CategoryResponse.of(id, keyboard);
     }
