@@ -41,11 +41,11 @@ public class Brand {
         this.category = category;
     }
 
-    public void InactivateStatus() {
-        this.status = Status.INACTIVE;
-    }
-
-    public void ActivateStatus() {
-        this.status = Status.ACTIVE;
-    }
+//    public void InactivateStatus() {
+//        this.status = Status.INACTIVE;
+//    }
+//
+//    public void ActivateStatus() {
+//        this.status = Status.ACTIVE;
+//    }
 }

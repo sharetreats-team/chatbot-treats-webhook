@@ -36,7 +36,7 @@ public class SendWelcomeMessage {
                         welcome_media, welcome_media));
     }
 
-    public List<WelcomeButton> createButtons() {
+    private List<WelcomeButton> createButtons() {
         return Collections.singletonList(WelcomeButton.of());
     }
 

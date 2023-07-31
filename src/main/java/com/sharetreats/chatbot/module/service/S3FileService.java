@@ -62,8 +62,12 @@ public class S3FileService {
     }
 
     private String createBrandFilename(String originalFileName) {
-        String type = originalFileName.substring(originalFileName.lastIndexOf("."));
-        return brandDirName +"/"+ UUID.randomUUID().toString().concat(type);
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+        if (!verifyFileType(fileExtension)) {
+            throw new IllegalArgumentException("업로드 가능한 파일 타입이 아닙니다.");
+        }
+        return brandDirName +"/"+ UUID.randomUUID().toString().concat(fileExtension);
     }
 
     private String createProductFilename(String originalFileName) {
@@ -71,11 +75,15 @@ public class S3FileService {
         return productDirName +"/"+ UUID.randomUUID().toString().concat(type);
     }
 
-    public void verifyFileType(String type) {
+    private boolean verifyFileType(String fileExtension) {
         String[] allowedTypeList = {"image/jpeg","image/jpg","image/png"};
         List<String> stringArrList = new ArrayList<>(Arrays.asList(allowedTypeList));
-        if(!stringArrList.contains(type))
-            throw new IllegalArgumentException("이미지 타입이 올바르지 않습니다.");
+
+        if(!stringArrList.contains(fileExtension)) {
+            return false;
+        }
+
+        return true;
     }
 
 }
