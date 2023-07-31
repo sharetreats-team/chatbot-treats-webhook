@@ -29,13 +29,10 @@ public class SendBrandKeyboardMessage {
 
         BrandResponse response = findBrandListForReceiverId(getIdFromSender(callback), categoryId);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Viber-Auth-Token", token);
-
+        HttpHeaders headers = setHttpHeaders();
         HttpEntity<BrandResponse> httpEntity = new HttpEntity<>(response, headers);
-        ResponseEntity<String> restResponse = restTemplateConfig.restTemplate().postForEntity(VIBER_SEND_MESSAGE_URL, httpEntity, String.class);
-        return restResponse;
+
+        return restTemplateConfig.restTemplate().postForEntity(VIBER_SEND_MESSAGE_URL, httpEntity, String.class);
     }
 
     private BrandResponse findBrandListForReceiverId(String id, Long categoryId) {
@@ -47,4 +44,10 @@ public class SendBrandKeyboardMessage {
         return new JSONObject(callback).getJSONObject("sender").getString("id");
     }
 
+    private HttpHeaders setHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Viber-Auth-Token", token);
+        return headers;
+    }
 }
