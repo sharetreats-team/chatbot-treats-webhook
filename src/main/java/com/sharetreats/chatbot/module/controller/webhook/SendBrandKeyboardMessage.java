@@ -38,7 +38,7 @@ public class SendBrandKeyboardMessage {
         return restResponse;
     }
 
-    public BrandResponse findBrandListForReceiverId(String id, Long categoryId) {
+    private BrandResponse findBrandListForReceiverId(String id, Long categoryId) {
         BrandKeyboard keyboard = BrandKeyboard.of(brandService.createBrandButtons(categoryId));
         return BrandResponse.of(id, keyboard);
     }
